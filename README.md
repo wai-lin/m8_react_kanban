@@ -12,3 +12,4 @@ Projects management Kanban board written in React.
 4. Drag & Drop Between Columns
 5. Edit Card Details
 6. LocalStorage Persistence
+7. Card editor with RichTextEditor(???Optional)
