@@ -19,5 +19,8 @@ export default defineConfig([
 			ecmaVersion: 2020,
 			globals: globals.browser,
 		},
+		rules: {
+			"react-hooks/refs": ["off"], // NOTE: React 19 no longer need the `forwardRef`
+		},
 	},
 ])

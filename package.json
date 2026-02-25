@@ -3,6 +3,10 @@
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
+	"imports": {
+		"#components": "./src/components/index.tsx",
+		"#hooks/*": "./src/hooks/*"
+	},
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
