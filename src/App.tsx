@@ -1,17 +1,10 @@
-import { useState } from "react"
+import { Route, Routes } from "react-router"
+import { Projects } from "./projects"
 
-function App() {
-	const [count, setCount] = useState(0)
-
+export function App() {
 	return (
-		<>
-			<div>
-				<button onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-			</div>
-		</>
+		<Routes>
+			<Route path="/" element={<Projects />} />
+		</Routes>
 	)
 }
-
-export default App
