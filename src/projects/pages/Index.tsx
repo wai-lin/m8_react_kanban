@@ -14,11 +14,15 @@ export function Index() {
 			>
 				<h2>Projects</h2>
 
-				<CreateNewProjectBtn />
+				<CreateNewProjectBtn
+					onCreate={(data) => {
+						projects.set({ ...data, id: projects.newId() })
+					}}
+				/>
 			</header>
 
 			<section className="flex">
-				{projects.isEmpty && <p className="card">There's no project yet.</p>}
+				{projects.isEmpty && <p className="card">There's no project yet...</p>}
 				{projects.items.map((p) => (
 					<p key={p.slug} className="card">
 						{p.title}
