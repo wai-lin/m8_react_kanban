@@ -5,6 +5,7 @@
 	"type": "module",
 	"imports": {
 		"#components": "./src/components/index.tsx",
+		"#contexts/*": "./src/contexts/*",
 		"#hooks/*": "./src/hooks/*",
 		"#utils/*": "./src/utils/*",
 		"#src/*": "./src/*"
