@@ -5,12 +5,11 @@ export type ModalProps = React.DetailedHTMLProps<
 
 export function Modal({
 	ref,
-	className,
 	children,
 	...rest
 }: React.PropsWithChildren<ModalProps>) {
 	return (
-		<dialog ref={ref} className={`modal ${className}`} {...rest}>
+		<dialog ref={ref} {...rest}>
 			<div className="modal-cover">{children}</div>
 		</dialog>
 	)
