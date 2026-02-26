@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router"
-import { Projects } from "./projects"
+import { projectPages } from "./projects"
 
 export function App() {
 	return (
 		<Routes>
-			<Route path="/" element={<Projects />} />
+			<Route path="/" element={<projectPages.Index />} />
 		</Routes>
 	)
 }

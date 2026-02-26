@@ -1,1 +1,5 @@
-export { Projects } from "./pages/Projects.tsx"
+import { Index } from "./pages/Index.tsx"
+
+export const projectPages = {
+	Index,
+}
