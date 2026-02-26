@@ -1,3 +1,4 @@
+import { ToastProvider, ToastsContainer } from "#components"
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router"
@@ -7,8 +8,11 @@ import "./assets/css/main.css"
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
+		<ToastProvider>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+			<ToastsContainer />
+		</ToastProvider>
 	</StrictMode>,
 )

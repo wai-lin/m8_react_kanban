@@ -2,6 +2,7 @@ import { FormField, Icon, Modal } from "#components"
 import { useForm } from "#hooks/useForm.ts"
 import { useInputState } from "#hooks/useInputState.ts"
 import { useModal } from "#hooks/useModal.ts"
+import { useToast } from "#hooks/useToast.ts"
 import { slugify } from "#utils/slugify.ts"
 import { useEffect } from "react"
 import z from "zod"
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function CreateNewProjectBtn({ onCreate }: Props) {
+	const toast = useToast()
 	const modal = useModal()
 	const form = useForm(schema)
 	const titleState = useInputState("")
@@ -29,6 +31,9 @@ export function CreateNewProjectBtn({ onCreate }: Props) {
 	const handleSubmit = form.onSubmit((data) => {
 		onCreate(data)
 		modal.close()
+		toast.add(`Project: "${data.title}", created successfully.`, {
+			type: "success",
+		})
 	})
 
 	return (
