@@ -4,50 +4,41 @@ import * as z4 from "zod/v4/core"
 export function useForm<
 	S extends z4.$ZodObject,
 	SOutput = z4.output<S>,
-	SError = z4.$ZodErrorTree<S>,
->(schema: S, defaultState: SOutput) {
-	const [state, setState] = useState<SOutput>(defaultState as SOutput)
+	SError = z4.$ZodFlattenedError<SOutput>,
+>(schema: S) {
 	const [errors, setErrors] = useState<SError>()
 
-	const parseState = () => {
-		const parsed = z4.safeParse(schema, state)
-		if (!parsed.success) setErrors(z4.treeifyError(parsed.error) as SError)
-		return parsed.data
+	const errorOf = (field: keyof SOutput) => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const err = errors as any
+		const msgs = (err?.fieldErrors?.[field] ?? []) as string[]
+		return msgs
 	}
 
-	const setField = <K extends keyof SOutput>(field: K, value: SOutput[K]) => {
-		setState((prev) => ({
-			...prev,
-			[field]: value,
-		}))
+	const validate = (data: unknown) => {
+		const parsed = z4.safeParse(schema, data)
+		if (!parsed.success) {
+			setErrors(z4.treeifyError(parsed.error) as SError)
+			return null
+		}
+		setErrors(undefined)
+		return parsed.data as SOutput
 	}
 
-	const handleOnChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-	) => {
-		const { name, type, value, checked } = e.target as never
-		const stateValue = type === "checkbox" ? checked : value
-
-		setState((prev) => ({
-			...prev,
-			[name]: stateValue,
-		}))
-	}
-
-	const handleOnSubmit = (callback: (data: SOutput) => void) => {
-		return (e: React.SubmitEvent<HTMLFormElement>) => {
+	const onSubmit = (callback: (data: SOutput) => void | Promise<void>) => {
+		return (e: React.SubmitEvent) => {
 			e.preventDefault()
-			const parsed = parseState()
-			if (parsed) callback(parsed as SOutput)
+			const formData = new FormData(e.target)
+			const data = Object.fromEntries(formData)
+			const validated = validate(data)
+			if (validated) callback(validated)
 		}
 	}
 
 	return {
-		state,
 		errors,
-		onSubmit: handleOnSubmit,
-		onChange: handleOnChange,
-		setState,
-		setField,
+		errorOf,
+		validate,
+		onSubmit,
 	}
 }
