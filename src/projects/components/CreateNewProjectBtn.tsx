@@ -1,5 +1,6 @@
 import { FormField, Icon, Modal } from "#components"
 import { useForm } from "#hooks/useForm.ts"
+import { useInputState } from "#hooks/useInputState.ts"
 import { useModal } from "#hooks/useModal.ts"
 import { slugify } from "#utils/slugify.ts"
 import { useEffect } from "react"
@@ -17,16 +18,13 @@ interface Props {
 
 export function CreateNewProjectBtn({ onCreate }: Props) {
 	const modal = useModal()
-	const form = useForm(schema, {
-		title: "",
-		slug: "",
-		description: "",
-	})
+	const form = useForm(schema)
+	const titleState = useInputState("")
+	const slugState = useInputState("")
 
 	useEffect(() => {
-		form.setField("slug", slugify(form.state.title ?? ""))
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [form.state.title])
+		slugState.setValue(slugify(titleState.value))
+	}, [slugState, titleState.value])
 
 	const handleSubmit = form.onSubmit((data) => {
 		onCreate(data)
@@ -43,35 +41,31 @@ export function CreateNewProjectBtn({ onCreate }: Props) {
 			<Modal {...modal.props} className="modal-top">
 				<h4 style={{ marginBottom: "var(--sp-md)" }}>Create new project</h4>
 				<form onSubmit={handleSubmit}>
-					<FormField label="Project Name">
+					<FormField label="Project Name" error={form.errorOf("title").at(0)}>
 						{(id) => (
 							<input
 								id={id}
 								name="title"
-								value={form.state.title}
-								onChange={form.onChange}
+								placeholder="Brrr"
+								{...titleState.bind}
 							/>
 						)}
 					</FormField>
-					<FormField label="Slug">
+					<FormField label="Slug" error={form.errorOf("slug").at(0)}>
 						{(id) => (
 							<input
 								id={id}
 								name="slug"
-								value={form.state.slug}
-								onChange={form.onChange}
+								placeholder="brrr"
+								{...slugState.bind}
 							/>
 						)}
 					</FormField>
-					<FormField label="Description">
-						{(id) => (
-							<textarea
-								id={id}
-								name="description"
-								value={form.state.description}
-								onChange={form.onChange}
-							></textarea>
-						)}
+					<FormField
+						label="Description"
+						error={form.errorOf("description").at(0)}
+					>
+						{(id) => <textarea id={id} name="description"></textarea>}
 					</FormField>
 					<button>Create</button>
 				</form>
