@@ -5,6 +5,7 @@ export function useModel<T extends { id: number }>(key: string) {
 	const storage = useRef(buildStorage<T>(key))
 	const [items, setItems] = useState(() => storage.current.get())
 
+	const newId = () => items.length + 1
 	const isEmpty = useMemo(() => items.length <= 0, [items.length])
 
 	function set(item: T) {
@@ -22,5 +23,5 @@ export function useModel<T extends { id: number }>(key: string) {
 		setItems([])
 	}
 
-	return { items, isEmpty, set, remove, empty }
+	return { items, isEmpty, newId, set, remove, empty }
 }
