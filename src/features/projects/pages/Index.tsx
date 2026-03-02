@@ -25,7 +25,7 @@ export function Index() {
 			<section className="flex gap-2">
 				{projects.isEmpty && <p className="card">There's no project yet...</p>}
 				{projects.items.map((p) => (
-					<ProjectCard key={p.slug} to="" project={p} />
+					<ProjectCard key={p.slug} to={`/prj/${p.slug}`} project={p} />
 				))}
 			</section>
 		</main>
