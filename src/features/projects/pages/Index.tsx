@@ -1,5 +1,6 @@
 import { useModel } from "#hooks/useModel.ts"
 import { CreateNewProjectBtn } from "../components/CreateNewProjectBtn"
+import { ProjectCard } from "../components/ProjectCard"
 import { storageKey } from "../constants"
 import type { Project } from "../types"
 
@@ -24,9 +25,7 @@ export function Index() {
 			<section className="flex gap-2">
 				{projects.isEmpty && <p className="card">There's no project yet...</p>}
 				{projects.items.map((p) => (
-					<p key={p.slug} className="card">
-						{p.title}
-					</p>
+					<ProjectCard key={p.slug} to="" project={p} />
 				))}
 			</section>
 		</main>
