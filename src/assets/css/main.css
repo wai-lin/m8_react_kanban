@@ -23,8 +23,11 @@
 
 	/* Spacing */
 	--radius: 4px;
+	--gap-xs: 0.25rem;
 	--gap-sm: 0.5rem;
 	--gap-md: 1rem;
+	--gap-lg: 1.5rem;
+	--gap-xl: 2rem;
 	--sp-xs: 0.25rem;
 	--sp-sm: 0.5rem;
 	--sp-md: 1rem;
@@ -328,6 +331,29 @@ label {
 
 .toast button:hover {
 	opacity: 1;
+}
+
+.board-column {
+	--board-column-bg: oklch(94% 0 0);
+	--board-column-padding: var(--sp-md);
+	--board-column-radius: var(--radius);
+	--board-column-min-height: 600px;
+
+	background-color: var(--board-column-bg);
+	padding: var(--board-column-padding);
+	border-radius: var(--board-column-radius);
+	min-height: var(--board-column-min-height);
+	min-width: 300px;
+}
+
+.board-column-title {
+	font-weight: 600;
+	color: var(--color-text);
+	margin: 0;
+}
+
+.board-column-content {
+	flex: 1;
 }
 
 @keyframes slideIn {
