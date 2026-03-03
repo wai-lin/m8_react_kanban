@@ -1,6 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap");
 
 :root {
+	/* Color Palettes */
+	--color-white: oklch(100% 0 0);
+	--gray-50: oklch(99% 0 0);
+	--gray-100: oklch(97% 0 0);
+	--gray-200: oklch(95% 0 0);
+	--gray-300: oklch(91% 0 0);
+	--gray-400: oklch(86% 0 0);
+	--gray-500: oklch(80% 0 0);
+	--gray-600: oklch(70% 0 0);
+	--gray-700: oklch(55% 0 0);
+	--gray-800: oklch(40% 0 0);
+	--gray-900: oklch(25% 0 0);
+
 	/* Color Channels (oklch) */
 	--hue-primary: 220;
 	--hue-success: 130;
@@ -11,9 +24,8 @@
 	--color-success: oklch(65% 0.15 var(--hue-success));
 	--color-danger: oklch(60% 0.15 var(--hue-danger));
 	--color-warning: oklch(70% 0.15 var(--hue-warning));
-	--color-bg: oklch(97% 0 0);
-	--color-text: oklch(20% 0 0);
-	--color-white: oklch(100% 0 0);
+	--color-bg: var(--gray-50);
+	--color-text: var(--gray-900);
 	--color-shadow: oklch(0% 0 0 / 0.1);
 
 	/* Semantic Colors */
@@ -334,15 +346,18 @@ label {
 }
 
 .board-column {
-	--board-column-bg: oklch(94% 0 0);
-	--board-column-padding: var(--sp-md);
+	--sub-height: 140px;
+	--board-column-bg: var(--gray-200);
+	--board-column-padding: var(--sp-sm);
 	--board-column-radius: var(--radius);
-	--board-column-min-height: 600px;
 
+	display: flex;
+	flex-direction: column;
 	background-color: var(--board-column-bg);
 	padding: var(--board-column-padding);
 	border-radius: var(--board-column-radius);
-	min-height: var(--board-column-min-height);
+	min-height: calc(100vh - var(--sub-height));
+	max-height: calc(100vh - var(--sub-height));
 	min-width: 300px;
 }
 
@@ -350,10 +365,19 @@ label {
 	font-weight: 600;
 	color: var(--color-text);
 	margin: 0;
+	flex-shrink: 0;
 }
 
 .board-column-content {
+	--board-column-content-bg: var(--gray-300);
+
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-md);
+	background-color: var(--board-column-content-bg);
+	border-radius: var(--radius);
 	flex: 1;
+	overflow-y: auto;
 }
 
 @keyframes slideIn {
