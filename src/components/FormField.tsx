@@ -1,22 +1,28 @@
-import { useId } from "react"
+import { Field, Text } from "@chakra-ui/react"
 
 export interface FormFieldProps {
-	label?: React.ReactNode
-	hint?: string
+	label: string
+	requiredIndicator?: boolean
 	error?: string
-	children?: (id: string) => React.ReactNode
+	hint?: string
 }
-export function FormField({ label, hint, error, children }: FormFieldProps) {
-	const inputId = useId()
-	const msg = error || hint
-	const hasMsg = (msg?.length ?? 0) > 0
-	const msgClass = (error?.length ?? 0) > 0 ? "error" : "hint"
 
+export function FormField({
+	label,
+	requiredIndicator = false,
+	error,
+	hint,
+	children,
+}: React.PropsWithChildren<FormFieldProps>) {
 	return (
-		<div>
-			<label htmlFor={inputId}>{label}</label>
-			{children?.(inputId)}
-			{hasMsg && <p className={msgClass}>{msg}</p>}
-		</div>
+		<Field.Root invalid={(error?.length || 0) > 0}>
+			<Field.Label>
+				<Text>{label}</Text>
+				{requiredIndicator && <Field.RequiredIndicator />}
+			</Field.Label>
+			{children}
+			<Field.HelperText>{hint}</Field.HelperText>
+			<Field.ErrorText>{error}</Field.ErrorText>
+		</Field.Root>
 	)
 }
