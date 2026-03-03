@@ -1,18 +1,20 @@
-import { ToastProvider, ToastsContainer } from "#components"
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router"
 import { App } from "./App.tsx"
-import "./assets/css/icons.css"
-import "./assets/css/main.css"
+import { Provider } from "./components/ui/provider.tsx"
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root")
+if (!root) {
+	throw new Error("`root` element not found!")
+}
+
+createRoot(root).render(
 	<StrictMode>
-		<ToastProvider>
+		<Provider enableSystem={false}>
 			<BrowserRouter>
 				<App />
 			</BrowserRouter>
-			<ToastsContainer />
-		</ToastProvider>
+		</Provider>
 	</StrictMode>,
 )
