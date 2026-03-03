@@ -1,6 +1,4 @@
 import { Dialog, FormField } from "#components"
-import { useForm } from "#hooks/useForm.ts"
-import { useInputState } from "#hooks/useInputState.ts"
 import { slugify } from "#utils/slugify.ts"
 import {
 	Button,
@@ -10,7 +8,9 @@ import {
 	Input,
 	Textarea,
 } from "@chakra-ui/react"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
+import { useForm, useWatch } from "react-hook-form"
 import z from "zod"
 
 const schema = z.object({
@@ -27,17 +27,19 @@ const createFormId = "project-create-form"
 
 export function CreateNewProjectBtn({ onCreate }: Props) {
 	const [open, setOpen] = useState(false)
-	const form = useForm(schema)
-	const titleState = useInputState("")
-	const slugState = useInputState("")
 
-	useEffect(() => {
-		slugState.setValue(slugify(titleState.value))
-	}, [slugState, titleState.value])
-
-	const handleSubmit = form.onSubmit((data) => {
-		onCreate(data).then(() => setOpen(false))
+	const { register, control, reset, handleSubmit, setValue, formState } =
+		useForm({
+			resolver: zodResolver(schema),
+		})
+	const onSubmit = handleSubmit(async (data) => {
+		await onCreate(data)
+		setOpen(false)
+		reset()
 	})
+
+	const watchTitle = useWatch({ control, name: "title", defaultValue: "" })
+	useEffect(() => setValue("slug", slugify(watchTitle)), [setValue, watchTitle])
 
 	return (
 		<Dialog
@@ -49,35 +51,39 @@ export function CreateNewProjectBtn({ onCreate }: Props) {
 				<ButtonGroup size="sm">
 					<Button
 						variant="outline"
-						disabled={form.isPending}
+						disabled={formState.isSubmitting}
 						onClick={() => setOpen(false)}
 					>
 						Cancel
 					</Button>
-					<Button type="submit" form={createFormId} loading={form.isPending}>
+					<Button
+						type="submit"
+						form={createFormId}
+						loading={formState.isSubmitting}
+					>
 						Save
 					</Button>
 				</ButtonGroup>
 			}
 		>
-			<form id={createFormId} onSubmit={handleSubmit}>
-				<Fieldset.Root disabled={form.isPending}>
+			<form id={createFormId} onSubmit={onSubmit}>
+				<Fieldset.Root disabled={formState.isSubmitting}>
 					<Fieldset.Content>
 						<FormField
 							label="Project Name"
 							requiredIndicator
-							error={form.errorOf("title").at(0)}
+							error={formState.errors.title?.message}
 						>
-							<Input name="title" {...titleState.bind} />
+							<Input {...register("title")} />
 						</FormField>
-						<FormField label="Slug" error={form.errorOf("slug").at(0)}>
-							<Input name="slug" {...slugState.bind} />
+						<FormField label="Slug" error={formState.errors.slug?.message}>
+							<Input {...register("slug")} />
 						</FormField>
 						<FormField
 							label="Description"
-							error={form.errorOf("description").at(0)}
+							error={formState.errors.description?.message}
 						>
-							<Textarea name="description" />
+							<Textarea {...register("description")} />
 						</FormField>
 					</Fieldset.Content>
 				</Fieldset.Root>
