@@ -1,3 +1,4 @@
+import { Card, Heading, Text } from "@chakra-ui/react"
 import { Link } from "react-router"
 import type { Project } from "../types"
 
@@ -9,10 +10,16 @@ interface Props {
 export function ProjectCard({ to, project }: Props) {
 	return (
 		<Link to={to} style={{ textDecoration: "none" }}>
-			<div className="card">
-				<h4>{project.title}</h4>
-				<p>{project.description}</p>
-			</div>
+			<Card.Root w="xs">
+				<Card.Header>
+					<Heading size="md" truncate>
+						{project.title}
+					</Heading>
+				</Card.Header>
+				<Card.Body>
+					<Text truncate>{project.description}</Text>
+				</Card.Body>
+			</Card.Root>
 		</Link>
 	)
 }

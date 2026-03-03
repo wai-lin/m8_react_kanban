@@ -1,4 +1,6 @@
 import { useModel } from "#hooks/useModel.ts"
+import { promiseAndSleep } from "#utils/promiseAndSleep.ts"
+import { Card, Container, Flex, Heading, Text } from "@chakra-ui/react"
 import { CreateNewProjectBtn } from "../components/CreateNewProjectBtn"
 import { ProjectCard } from "../components/ProjectCard"
 import { storageKey } from "../constants"
@@ -8,26 +10,31 @@ export function Index() {
 	const projects = useModel<Project>(storageKey)
 
 	return (
-		<main className="container">
-			<header
-				className="flex gap-2"
-				style={{ paddingTop: "var(--sp-md)", marginBottom: "var(--sp-lg)" }}
-			>
-				<h2>Projects</h2>
+		<Container>
+			<Flex gap="4" mt="8" mb="4" align="center">
+				<Heading>Projects</Heading>
 
 				<CreateNewProjectBtn
-					onCreate={(data) => {
-						projects.set({ ...data, id: projects.newId() })
-					}}
+					onCreate={(data) =>
+						promiseAndSleep(() => {
+							projects.set({ ...data, id: projects.newId() })
+						}, 500)
+					}
 				/>
-			</header>
+			</Flex>
 
-			<section className="flex gap-2">
-				{projects.isEmpty && <p className="card">There's no project yet...</p>}
+			<Flex gap="4" wrap="wrap">
+				{projects.isEmpty && (
+					<Card.Root>
+						<Card.Body>
+							<Text>There's no project yet...</Text>
+						</Card.Body>
+					</Card.Root>
+				)}
 				{projects.items.map((p) => (
 					<ProjectCard key={p.slug} to={`/prj/${p.slug}`} project={p} />
 				))}
-			</section>
-		</main>
+			</Flex>
+		</Container>
 	)
 }

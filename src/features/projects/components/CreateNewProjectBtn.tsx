@@ -1,10 +1,16 @@
-import { FormField, Icon, Modal } from "#components"
+import { Dialog, FormField } from "#components"
 import { useForm } from "#hooks/useForm.ts"
 import { useInputState } from "#hooks/useInputState.ts"
-import { useModal } from "#hooks/useModal.ts"
-import { useToast } from "#hooks/useToast.ts"
 import { slugify } from "#utils/slugify.ts"
-import { useEffect } from "react"
+import {
+	Button,
+	ButtonGroup,
+	Fieldset,
+	Heading,
+	Input,
+	Textarea,
+} from "@chakra-ui/react"
+import { useEffect, useState } from "react"
 import z from "zod"
 
 const schema = z.object({
@@ -14,12 +20,13 @@ const schema = z.object({
 })
 
 interface Props {
-	onCreate: (data: z.output<typeof schema>) => void | Promise<void>
+	onCreate: (data: z.output<typeof schema>) => Promise<void>
 }
 
+const createFormId = "project-create-form"
+
 export function CreateNewProjectBtn({ onCreate }: Props) {
-	const toast = useToast()
-	const modal = useModal()
+	const [open, setOpen] = useState(false)
 	const form = useForm(schema)
 	const titleState = useInputState("")
 	const slugState = useInputState("")
@@ -29,52 +36,52 @@ export function CreateNewProjectBtn({ onCreate }: Props) {
 	}, [slugState, titleState.value])
 
 	const handleSubmit = form.onSubmit((data) => {
-		onCreate(data)
-		modal.close()
-		toast.add(`Project: "${data.title}", created successfully.`, {
-			type: "success",
-		})
+		onCreate(data).then(() => setOpen(false))
 	})
 
 	return (
-		<>
-			<button className="btn-sm" onClick={() => modal.show()}>
-				<Icon name="plus-solid" />
-				Create new
-			</button>
-
-			<Modal {...modal.props} className="modal-top">
-				<h4 style={{ marginBottom: "var(--sp-md)" }}>Create new project</h4>
-				<form onSubmit={handleSubmit}>
-					<FormField label="Project Name" error={form.errorOf("title").at(0)}>
-						{(id) => (
-							<input
-								id={id}
-								name="title"
-								placeholder="Brrr"
-								{...titleState.bind}
-							/>
-						)}
-					</FormField>
-					<FormField label="Slug" error={form.errorOf("slug").at(0)}>
-						{(id) => (
-							<input
-								id={id}
-								name="slug"
-								placeholder="brrr"
-								{...slugState.bind}
-							/>
-						)}
-					</FormField>
-					<FormField
-						label="Description"
-						error={form.errorOf("description").at(0)}
+		<Dialog
+			open={open}
+			onOpenChange={(e) => setOpen(e.open)}
+			trigger={<Button size="sm">Create new</Button>}
+			title={<Heading>Create new project</Heading>}
+			footer={
+				<ButtonGroup size="sm">
+					<Button
+						variant="outline"
+						disabled={form.isPending}
+						onClick={() => setOpen(false)}
 					>
-						{(id) => <textarea id={id} name="description"></textarea>}
-					</FormField>
-					<button>Create</button>
-				</form>
-			</Modal>
-		</>
+						Cancel
+					</Button>
+					<Button type="submit" form={createFormId} loading={form.isPending}>
+						Save
+					</Button>
+				</ButtonGroup>
+			}
+		>
+			<form id={createFormId} onSubmit={handleSubmit}>
+				<Fieldset.Root disabled={form.isPending}>
+					<Fieldset.Content>
+						<FormField
+							label="Project Name"
+							requiredIndicator
+							error={form.errorOf("title").at(0)}
+						>
+							<Input name="title" {...titleState.bind} />
+						</FormField>
+						<FormField label="Slug" error={form.errorOf("slug").at(0)}>
+							<Input name="slug" {...slugState.bind} />
+						</FormField>
+						<FormField
+							label="Description"
+							error={form.errorOf("description").at(0)}
+						>
+							<Textarea name="description" />
+						</FormField>
+					</Fieldset.Content>
+				</Fieldset.Root>
+			</form>
+		</Dialog>
 	)
 }
