@@ -15,7 +15,8 @@
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"depcheck": "npx knip"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "^3.33.0",
