@@ -1,34 +1,37 @@
-import { Icon, Stack } from "#components"
+import { Flex, Heading, Stack } from "@chakra-ui/react"
 import { Children } from "react"
 
 export interface BoardColumnProps {
 	title: string
-	iconColor?: string
+	icon?: React.ReactNode
 	children?: React.ReactNode
 }
 
-export function BoardColumn({ title, iconColor, children }: BoardColumnProps) {
+export function BoardColumn({ title, icon, children }: BoardColumnProps) {
 	const hasChildren = Children.count(children) > 0
 
 	return (
-		<Stack direction="column" gap="md" className="board-column">
-			<Stack direction="row" gap="xs" align="center">
-				<Icon
-					name="check-circle-solid"
-					style={{ color: iconColor, width: "1.2rem" }}
-				/>
-				<h3 className="board-column-title">{title}</h3>
-			</Stack>
+		<Stack
+			gap="4"
+			py="4"
+			px="2"
+			w="300px"
+			h="100%"
+			rounded="sm"
+			shadow="sm"
+			bgColor="gray.100"
+		>
+			<Flex gap="1" align="center" flexShrink={0}>
+				{icon}
+				<Heading size="lg">{title}</Heading>
+			</Flex>
+
 			<Stack
-				direction="column"
-				gap="md"
-				className="board-column-content"
-				style={{
-					// @ts-expect-error: Ignore the error! This is just changing css variable value
-					"--board-column-content-bg": hasChildren
-						? "transparent"
-						: "var(--gray-300)",
-				}}
+				gap="2"
+				bgColor={hasChildren ? "" : "gray.200"}
+				flex="1"
+				overflowY="auto"
+				rounded="sm"
 			>
 				{children}
 			</Stack>

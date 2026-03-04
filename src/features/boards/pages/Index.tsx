@@ -1,28 +1,33 @@
-import { Stack } from "#components"
+import { TaskCard } from "#src/features/tasks/index.tsx"
+import { Box, Container, Flex, Heading } from "@chakra-ui/react"
+import { LuCircleDashed, LuCircleDot, LuCircleDotDashed } from "react-icons/lu"
 import { BoardColumn } from "../components/BoardColumn"
 
 export function Index() {
 	return (
-		<main className="container">
-			<header
-				style={{ paddingTop: "var(--sp-md)", marginBottom: "var(--sp-lg)" }}
-			>
-				<h3>Tasks</h3>
-			</header>
+		<Container
+			maxW="100%"
+			padding="0"
+			height="100vh"
+			display="flex"
+			flexDirection="column"
+		>
+			<Box paddingX="6" paddingY="4">
+				<Heading size="lg">Tasks</Heading>
+			</Box>
 
-			<Stack direction="row" gap="lg">
-				<BoardColumn title="Todo" iconColor="var(--color-primary)">
-					<h4 className="card">Authentication Flow</h4>
-					<h4 className="card">Create dashboard</h4>
+			<Flex gap="6" flex="1" paddingX="6" paddingBottom="6" overflowX="auto">
+				<BoardColumn title="Todo" icon={<LuCircleDashed />}>
+					<TaskCard header={<Heading size="md">Authentication Flow</Heading>} />
+					<TaskCard header={<Heading size="md">Create dashboard</Heading>} />
 				</BoardColumn>
-				<BoardColumn title="InProgress" iconColor="var(--color-warning)">
-					<h4 className="card">Define user requirements</h4>
+				<BoardColumn title="InProgress" icon={<LuCircleDotDashed />}>
+					<TaskCard
+						header={<Heading size="md">Define user requirements</Heading>}
+					/>
 				</BoardColumn>
-				<BoardColumn
-					title="Done"
-					iconColor="var(--color-success)"
-				></BoardColumn>
-			</Stack>
-		</main>
+				<BoardColumn title="Done" icon={<LuCircleDot />}></BoardColumn>
+			</Flex>
+		</Container>
 	)
 }
