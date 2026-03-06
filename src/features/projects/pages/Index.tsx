@@ -1,13 +1,11 @@
-import { useModel } from "#hooks/useModel.ts"
 import { promiseAndSleep } from "#utils/promiseAndSleep.ts"
 import { Card, Container, Flex, Heading, Text } from "@chakra-ui/react"
 import { CreateNewProjectBtn } from "../components/CreateNewProjectBtn"
 import { ProjectCard } from "../components/ProjectCard"
-import { storageKey } from "../constants"
-import type { Project } from "../types"
+import { useProjectsModel } from "../hooks/useProjectModel"
 
 export function Index() {
-	const projects = useModel<Project>(storageKey)
+	const projects = useProjectsModel()
 
 	return (
 		<Container>

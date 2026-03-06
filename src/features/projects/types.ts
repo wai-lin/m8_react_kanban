@@ -1,6 +1,4 @@
-export interface Project {
-	id: number
-	slug: string
-	title: string
-	description: string
-}
+import type z from "zod"
+import type { projectSchema } from "./constants"
+
+export type Project = z.output<typeof projectSchema>

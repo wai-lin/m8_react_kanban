@@ -12,11 +12,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { useForm, useWatch } from "react-hook-form"
 import z from "zod"
+import { projectSchema } from "../constants"
 
-const schema = z.object({
-	title: z.string().min(1, "required."),
-	slug: z.string().min(1, "required."),
-	description: z.string().default(""),
+const schema = projectSchema.pick({
+	title: true,
+	slug: true,
+	description: true,
 })
 
 interface Props {
@@ -32,6 +33,7 @@ export function CreateNewProjectBtn({ onCreate }: Props) {
 		useForm({
 			resolver: zodResolver(schema),
 		})
+
 	const onSubmit = handleSubmit(async (data) => {
 		await onCreate(data)
 		setOpen(false)
@@ -76,7 +78,11 @@ export function CreateNewProjectBtn({ onCreate }: Props) {
 						>
 							<Input {...register("title")} />
 						</FormField>
-						<FormField label="Slug" error={formState.errors.slug?.message}>
+						<FormField
+							label="Slug"
+							requiredIndicator
+							error={formState.errors.slug?.message}
+						>
 							<Input {...register("slug")} />
 						</FormField>
 						<FormField
