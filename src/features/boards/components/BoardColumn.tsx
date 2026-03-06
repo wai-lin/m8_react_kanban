@@ -1,14 +1,23 @@
 import { Flex, Heading, Stack } from "@chakra-ui/react"
+import { useDroppable } from "@dnd-kit/react"
 import { Children } from "react"
 
 export interface BoardColumnProps {
+	dropId: string
 	title: string
 	icon?: React.ReactNode
 	children?: React.ReactNode
 }
 
-export function BoardColumn({ title, icon, children }: BoardColumnProps) {
+export function BoardColumn({
+	dropId,
+	title,
+	icon,
+	children,
+}: BoardColumnProps) {
 	const hasChildren = Children.count(children) > 0
+
+	const { ref } = useDroppable({ id: dropId })
 
 	return (
 		<Stack
@@ -27,6 +36,7 @@ export function BoardColumn({ title, icon, children }: BoardColumnProps) {
 			</Flex>
 
 			<Stack
+				ref={ref}
 				gap="2"
 				bgColor={hasChildren ? "" : "gray.200"}
 				flex="1"
