@@ -1,12 +1,24 @@
-import { Route, Routes } from "react-router"
-import { boardsPages } from "./features/boards/"
+import { createBrowserRouter } from "react-router"
+import { RouterProvider } from "react-router/dom"
+import { AppLayout } from "./features/app_layouts"
 import { projectPages } from "./features/projects"
 
+const router = createBrowserRouter([
+	{
+		element: <AppLayout />,
+		children: [
+			{ index: true, Component: projectPages.Index },
+			{
+				path: "/project/:id",
+				lazy: async () => {
+					const { boardsPages } = await import("./features/boards")
+					return { Component: boardsPages.Index }
+				},
+			},
+		],
+	},
+])
+
 export function App() {
-	return (
-		<Routes>
-			<Route path="/" element={<projectPages.Index />} />
-			<Route path="/prj/:id" element={<boardsPages.Index />} />
-		</Routes>
-	)
+	return <RouterProvider router={router} />
 }

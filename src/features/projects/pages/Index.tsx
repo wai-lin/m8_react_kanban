@@ -32,7 +32,7 @@ export function Index() {
 					</Card.Root>
 				)}
 				{projects.items.map((p) => (
-					<ProjectCard key={p.slug} to={`/prj/${p.slug}`} project={p} />
+					<ProjectCard key={p.slug} to={`/project/${p.slug}`} project={p} />
 				))}
 			</Flex>
 		</Container>

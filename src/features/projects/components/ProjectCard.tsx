@@ -9,8 +9,8 @@ interface Props {
 
 export function ProjectCard({ to, project }: Props) {
 	return (
-		<Link to={to} style={{ textDecoration: "none" }}>
-			<Card.Root w="xs">
+		<Card.Root w="xs" asChild>
+			<Link to={to} style={{ textDecoration: "none" }}>
 				<Card.Header>
 					<Heading size="md" truncate>
 						{project.title}
@@ -19,7 +19,7 @@ export function ProjectCard({ to, project }: Props) {
 				<Card.Body>
 					<Text truncate>{project.description}</Text>
 				</Card.Body>
-			</Card.Root>
-		</Link>
+			</Link>
+		</Card.Root>
 	)
 }
