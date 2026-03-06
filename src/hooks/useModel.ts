@@ -8,6 +8,10 @@ export function useModel<T extends { id: number }>(key: string) {
 	const newId = () => items.length + 1
 	const isEmpty = useMemo(() => items.length <= 0, [items.length])
 
+	function get(id: number) {
+		return items.find((i) => i.id === id)
+	}
+
 	function set(item: T) {
 		storage.current.set(item)
 		setItems(storage.current.get())
@@ -23,5 +27,5 @@ export function useModel<T extends { id: number }>(key: string) {
 		setItems([])
 	}
 
-	return { items, isEmpty, newId, set, remove, empty }
+	return { items, isEmpty, newId, get, set, remove, empty }
 }
