@@ -4,6 +4,7 @@ import { CreateNewTaskBtn, TaskCard } from "#src/features/tasks/index.tsx"
 import { promiseAndSleep } from "#utils/promiseAndSleep.ts"
 import { slugify } from "#utils/slugify.ts"
 import { AbsoluteCenter, Container, Flex, Heading } from "@chakra-ui/react"
+import { DragDropProvider } from "@dnd-kit/react"
 import { useMemo } from "react"
 import { LuCircleDashed, LuCircleDot, LuCircleDotDashed } from "react-icons/lu"
 import { useParams } from "react-router"
@@ -17,6 +18,13 @@ export function Index() {
 	const project = useMemo(() => {
 		return projectsModel.items.find((p) => p.slug === params.slug)
 	}, [params.slug, projectsModel.items])
+
+	function moveTaskCard(sourceId?: string, targetId?: string) {
+		if (!sourceId || !targetId) return
+		const task = tasksModel.get(Number(sourceId))
+		if (!task) return
+		tasksModel.set({ ...task, status: String(targetId), updatedAt: new Date() })
+	}
 
 	if (!project) {
 		return (
@@ -47,46 +55,61 @@ export function Index() {
 				/>
 			</Flex>
 
-			<Flex gap="6" flex="1" paddingX="6" paddingBottom="6" overflowX="auto">
-				<BoardColumn title="Todo" icon={<LuCircleDashed />}>
-					{tasksModel.items
-						.filter((t) => t.status === "todo")
-						.map((t) => (
-							<TaskCard
-								key={slugify(t.title)}
-								header={<Heading size="md">{t.title}</Heading>}
-							>
-								{t.description}
-							</TaskCard>
-						))}
-				</BoardColumn>
+			<DragDropProvider
+				onDragEnd={(ev) => {
+					if (ev.canceled) return
+					const { target, source } = ev.operation
+					moveTaskCard(source?.id as string, target?.id as string)
+				}}
+			>
+				<Flex gap="6" flex="1" paddingX="6" paddingBottom="6" overflowX="auto">
+					<BoardColumn dropId="todo" title="Todo" icon={<LuCircleDashed />}>
+						{tasksModel.items
+							.filter((t) => t.status === "todo")
+							.map((t) => (
+								<TaskCard
+									id={t.id}
+									key={slugify(t.title)}
+									header={<Heading size="md">{t.title}</Heading>}
+								>
+									{t.description}
+								</TaskCard>
+							))}
+					</BoardColumn>
 
-				<BoardColumn title="InProgress" icon={<LuCircleDotDashed />}>
-					{tasksModel.items
-						.filter((t) => t.status === "in-progress")
-						.map((t) => (
-							<TaskCard
-								key={slugify(t.title)}
-								header={<Heading size="md">{t.title}</Heading>}
-							>
-								{t.description}
-							</TaskCard>
-						))}
-				</BoardColumn>
+					<BoardColumn
+						dropId="in-progress"
+						title="InProgress"
+						icon={<LuCircleDotDashed />}
+					>
+						{tasksModel.items
+							.filter((t) => t.status === "in-progress")
+							.map((t) => (
+								<TaskCard
+									id={t.id}
+									key={slugify(t.title)}
+									header={<Heading size="md">{t.title}</Heading>}
+								>
+									{t.description}
+								</TaskCard>
+							))}
+					</BoardColumn>
 
-				<BoardColumn title="Done" icon={<LuCircleDot />}>
-					{tasksModel.items
-						.filter((t) => t.status === "done")
-						.map((t) => (
-							<TaskCard
-								key={slugify(t.title)}
-								header={<Heading size="md">{t.title}</Heading>}
-							>
-								{t.description}
-							</TaskCard>
-						))}
-				</BoardColumn>
-			</Flex>
+					<BoardColumn dropId="done" title="Done" icon={<LuCircleDot />}>
+						{tasksModel.items
+							.filter((t) => t.status === "done")
+							.map((t) => (
+								<TaskCard
+									id={t.id}
+									key={slugify(t.title)}
+									header={<Heading size="md">{t.title}</Heading>}
+								>
+									{t.description}
+								</TaskCard>
+							))}
+					</BoardColumn>
+				</Flex>
+			</DragDropProvider>
 		</Container>
 	)
 }
