@@ -11,10 +11,10 @@ export function TaskCard({
 	header,
 	children,
 }: React.PropsWithChildren<TaskCardProps>) {
-	const { ref } = useDraggable({ id })
+	const { ref, isDragging } = useDraggable({ id: String(id) })
 	return (
-		<Card.Root ref={ref} cursor="grab">
-			<Card.Header asChild>{header}</Card.Header>
+		<Card.Root ref={ref} cursor="grab" opacity={isDragging ? 0.5 : 1}>
+			<Card.Header>{header}</Card.Header>
 			<Card.Body>{children}</Card.Body>
 		</Card.Root>
 	)

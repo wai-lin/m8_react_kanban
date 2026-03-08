@@ -4,8 +4,8 @@ import { CreateNewTaskBtn, TaskCard } from "#src/features/tasks/index.tsx"
 import { promiseAndSleep } from "#utils/promiseAndSleep.ts"
 import { slugify } from "#utils/slugify.ts"
 import { AbsoluteCenter, Container, Flex, Heading } from "@chakra-ui/react"
-import { DragDropProvider } from "@dnd-kit/react"
-import { useMemo } from "react"
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react"
+import { useMemo, useState } from "react"
 import { LuCircleDashed, LuCircleDot, LuCircleDotDashed } from "react-icons/lu"
 import { useParams } from "react-router"
 import { BoardColumn } from "../components/BoardColumn"
@@ -14,10 +14,16 @@ export function Index() {
 	const params = useParams()
 	const tasksModel = useTasksModel()
 	const projectsModel = useProjectsModel()
+	const [activeId, setActiveId] = useState<string | null>(null)
 
 	const project = useMemo(() => {
 		return projectsModel.items.find((p) => p.slug === params.slug)
 	}, [params.slug, projectsModel.items])
+
+	const activeTask = useMemo(() => {
+		if (!activeId) return null
+		return tasksModel.get(Number(activeId))
+	}, [activeId, tasksModel])
 
 	function moveTaskCard(sourceId?: string, targetId?: string) {
 		if (!sourceId || !targetId) return
@@ -56,7 +62,11 @@ export function Index() {
 			</Flex>
 
 			<DragDropProvider
+				onDragStart={(ev) => {
+					setActiveId(ev.operation.source?.id as string)
+				}}
 				onDragEnd={(ev) => {
+					setActiveId(null)
 					if (ev.canceled) return
 					const { target, source } = ev.operation
 					moveTaskCard(source?.id as string, target?.id as string)
@@ -109,6 +119,17 @@ export function Index() {
 							))}
 					</BoardColumn>
 				</Flex>
+
+				<DragOverlay>
+					{activeTask ? (
+						<TaskCard
+							id={activeTask.id}
+							header={<Heading size="md">{activeTask.title}</Heading>}
+						>
+							{activeTask.description}
+						</TaskCard>
+					) : null}
+				</DragOverlay>
 			</DragDropProvider>
 		</Container>
 	)
