@@ -5,7 +5,7 @@ import { ProjectCard } from "../components/ProjectCard"
 import { useProjectsModel } from "../hooks/useProjectModel"
 
 export function Index() {
-	const projects = useProjectsModel()
+	const projectsModel = useProjectsModel()
 
 	return (
 		<Container>
@@ -15,22 +15,22 @@ export function Index() {
 				<CreateNewProjectBtn
 					onCreate={(data) =>
 						promiseAndSleep(() => {
-							projects.set({ ...data, id: projects.newId() })
+							projectsModel.set({ ...data, id: projectsModel.newId() })
 						}, 500)
 					}
 				/>
 			</Flex>
 
 			<Flex gap="4" wrap="wrap">
-				{projects.isEmpty && (
+				{projectsModel.isEmpty && (
 					<Card.Root>
 						<Card.Body>
 							<Text>There's no project yet...</Text>
 						</Card.Body>
 					</Card.Root>
 				)}
-				{projects.items.map((p) => (
-					<ProjectCard key={p.slug} to={`/project/${p.slug}`} project={p} />
+				{projectsModel.items.map((p) => (
+					<ProjectCard key={p.slug} to={`/${p.slug}`} project={p} />
 				))}
 			</Flex>
 		</Container>

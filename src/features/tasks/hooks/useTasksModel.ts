@@ -1,5 +1,5 @@
 import { useModel } from "#hooks/useModel.ts"
-import { storageKey } from "../constants"
+import { storageKeys } from "../constants"
 import type { Task } from "../types"
 
-export const useTasksModel = () => useModel<Task>(storageKey)
+export const useTasksModel = () => useModel<Task>(storageKeys.tasks)

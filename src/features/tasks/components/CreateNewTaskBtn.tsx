@@ -59,7 +59,7 @@ export function CreateNewTaskBtn({ projectId, onCreate }: Props) {
 		<Dialog
 			open={open}
 			onOpenChange={(e) => setOpen(e.open)}
-			trigger={<Button size="sm">Create new</Button>}
+			trigger={<Button size="sm">New Task</Button>}
 			title={<Heading>Create new task</Heading>}
 			footer={
 				<ButtonGroup size="sm">
