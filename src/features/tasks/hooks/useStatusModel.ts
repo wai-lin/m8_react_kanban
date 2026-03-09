@@ -31,7 +31,6 @@ export function useStatusModel() {
 	const model = useModel<Status>(storageKeys.status)
 
 	useEffect(() => {
-		console.log(storageKeys.status, model.isEmpty)
 		if (model.isEmpty) {
 			defaults.forEach((df) => model.set(df))
 		}
