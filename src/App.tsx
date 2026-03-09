@@ -9,11 +9,20 @@ const router = createBrowserRouter([
 		children: [
 			{ index: true, Component: projectPages.Index },
 			{
-				path: "/project/:slug",
+				path: "/:slug",
 				lazy: async () => {
 					const { boardsPages } = await import("./features/boards")
 					return { Component: boardsPages.Index }
 				},
+				children: [
+					{
+						path: ":taskId",
+						lazy: async () => {
+							const { tasksPages } = await import("./features/tasks")
+							return { Component: tasksPages.TaskDetail }
+						},
+					},
+				],
 			},
 		],
 	},
