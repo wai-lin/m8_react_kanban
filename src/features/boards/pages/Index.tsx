@@ -16,9 +16,9 @@ import {
 	HStack,
 	IconButton,
 } from "@chakra-ui/react"
-import { DragDropProvider } from "@dnd-kit/react"
-import { useMemo } from "react"
-import { LuArrowLeft, LuExternalLink } from "react-icons/lu"
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react"
+import { useMemo, useState } from "react"
+import { LuArrowLeft, LuCircleDashed, LuExternalLink } from "react-icons/lu"
 import { Link, Outlet, useParams } from "react-router"
 import { BoardColumn } from "../components/BoardColumn"
 import { CreateNewColBtn } from "../components/CreateNewColBtn"
@@ -29,6 +29,7 @@ export function Index() {
 	const statusModel = useStatusModel()
 	const tasksModel = useTasksModel()
 	const projectsModel = useProjectsModel()
+	const [activeId, setActiveId] = useState<string | null>(null)
 
 	const project = useMemo(() => {
 		return projectsModel.items.find((p) => p.slug === params.slug)
@@ -37,6 +38,11 @@ export function Index() {
 	const tasks = useMemo(() => {
 		return tasksModel.items.filter((t) => t.projectId === project?.id)
 	}, [project?.id, tasksModel.items])
+
+	const activeTask = useMemo(() => {
+		if (!activeId) return null
+		return tasksModel.get(Number(activeId))
+	}, [activeId, tasksModel])
 
 	function moveTaskCard(sourceId?: string, targetId?: string) {
 		if (!sourceId || !targetId) return
@@ -79,7 +85,11 @@ export function Index() {
 				</Flex>
 
 				<DragDropProvider
+					onDragStart={(ev) => {
+						setActiveId(ev.operation.source?.id as string)
+					}}
 					onDragEnd={(ev) => {
+						setActiveId(null)
 						if (ev.canceled) return
 						const { target, source } = ev.operation
 						moveTaskCard(source?.id as string, target?.id as string)
@@ -95,7 +105,12 @@ export function Index() {
 						minH="0"
 					>
 						{statusModel.items.map((col) => (
-							<BoardColumn key={col.value} dropId={col.value} title={col.title}>
+							<BoardColumn
+								key={col.value}
+								dropId={col.value}
+								title={col.title}
+								icon={<LuCircleDashed />}
+							>
 								{tasks
 									.filter((t) => t.status === col.value)
 									.map((t) => (
@@ -128,6 +143,17 @@ export function Index() {
 							}
 						/>
 					</Flex>
+
+					<DragOverlay>
+						{activeTask ? (
+							<TaskCard
+								id={activeTask.id}
+								header={<Heading size="md">{activeTask.title}</Heading>}
+							>
+								{activeTask.description}
+							</TaskCard>
+						) : null}
+					</DragOverlay>
 				</DragDropProvider>
 			</Container>
 
