@@ -5,22 +5,17 @@ import { Children } from "react"
 export interface BoardColumnProps {
 	dropId: string
 	title: string
-	icon?: React.ReactNode
 	children?: React.ReactNode
 }
 
-export function BoardColumn({
-	dropId,
-	title,
-	icon,
-	children,
-}: BoardColumnProps) {
+export function BoardColumn({ dropId, title, children }: BoardColumnProps) {
 	const hasChildren = Children.count(children) > 0
 
 	const { ref } = useDroppable({ id: dropId })
 
 	return (
 		<Stack
+			flex="none"
 			gap="4"
 			py="4"
 			px="2"
@@ -31,8 +26,9 @@ export function BoardColumn({
 			bgColor="gray.100"
 		>
 			<Flex gap="1" align="center" flexShrink={0}>
-				{icon}
-				<Heading size="lg">{title}</Heading>
+				<Heading pl="1" size="lg">
+					{title}
+				</Heading>
 			</Flex>
 
 			<Stack
