@@ -20,7 +20,8 @@
 		"typecheck": "tsc --noEmit",
 		"lint": "eslint .",
 		"lint-fmt": "prettier --check .",
-		"depcheck": "npx knip"
+		"depcheck": "knip --dependencies",
+		"check-all": "pnpm typecheck && pnpm lint && pnpm lint-fmt && pnpm depcheck"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "^3.33.0",
@@ -40,7 +41,6 @@
 		"@testing-library/dom": "^10.4.1",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
-		"@testing-library/user-event": "^14.6.1",
 		"@types/node": "^24.10.1",
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",
@@ -50,6 +50,7 @@
 		"eslint-plugin-react-refresh": "^0.4.24",
 		"globals": "^16.5.0",
 		"jsdom": "^28.1.0",
+		"knip": "^5.86.0",
 		"prettier": "^3.8.1",
 		"prettier-plugin-organize-imports": "^4.3.0",
 		"resize-observer-polyfill": "^1.5.1",

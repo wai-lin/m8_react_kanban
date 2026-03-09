@@ -1,15 +1,13 @@
-import { render, type RenderOptions } from "@testing-library/react"
+import { render as rndr, type RenderOptions } from "@testing-library/react"
 import type { ReactElement } from "react"
 import { Provider } from "./components/ui/provider.tsx"
 
+// eslint-disable-next-line react-refresh/only-export-components
 const AllProviders = ({ children }: { children: React.ReactNode }) => {
 	return <Provider>{children}</Provider>
 }
 
-const customRender = (
+export const render = (
 	ui: ReactElement,
 	options?: Omit<RenderOptions, "wrapper">,
-) => render(ui, { wrapper: AllProviders, ...options })
-
-export * from "@testing-library/react"
-export { customRender as render }
+) => rndr(ui, { wrapper: AllProviders, ...options })

@@ -1,13 +1,10 @@
-export function getFromStorage<T>(key: string): T[] {
+function getFromStorage<T>(key: string): T[] {
 	const jsonStr = localStorage.getItem(key) ?? ""
 	if (jsonStr.length <= 0) return []
 	return JSON.parse(jsonStr)
 }
 
-export function setInStorage<T extends { id: number }>(
-	key: string,
-	item: T,
-): void {
+function setInStorage<T extends { id: number }>(key: string, item: T): void {
 	const items = getFromStorage<T>(key)
 	const itemIdx = items.findIndex((i) => i.id === item.id)
 
@@ -17,7 +14,7 @@ export function setInStorage<T extends { id: number }>(
 	localStorage.setItem(key, JSON.stringify(items))
 }
 
-export function removeItemFromStorage<T extends { id: number }>(
+function removeItemFromStorage<T extends { id: number }>(
 	key: string,
 	item: number | T,
 ): void {
