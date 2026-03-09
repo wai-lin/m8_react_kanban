@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react"
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react"
 import { useMemo, useState } from "react"
-import { LuArrowLeft, LuCircleDashed, LuExternalLink } from "react-icons/lu"
+import { LuArrowLeft, LuExternalLink } from "react-icons/lu"
 import { Link, Outlet, useParams } from "react-router"
 import { BoardColumn } from "../components/BoardColumn"
 import { CreateNewColBtn } from "../components/CreateNewColBtn"
@@ -105,12 +105,7 @@ export function Index() {
 						minH="0"
 					>
 						{statusModel.items.map((col) => (
-							<BoardColumn
-								key={col.value}
-								dropId={col.value}
-								title={col.title}
-								icon={<LuCircleDashed />}
-							>
+							<BoardColumn key={col.value} dropId={col.value} title={col.title}>
 								{tasks
 									.filter((t) => t.status === col.value)
 									.map((t) => (
