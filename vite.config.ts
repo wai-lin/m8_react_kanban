@@ -5,7 +5,7 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
-	base: process.env.NODE_ENV === "production" ? "./" : "/",
+	base: process.env.NODE_ENV === "production" ? "/m8_react_kanban/" : "/",
 	plugins: [react()],
 	test: {
 		environment: "jsdom",
