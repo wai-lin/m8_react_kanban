@@ -1,6 +1,8 @@
 import z from "zod"
 
-export const storageKey = "kprojects"
+export const storageKeys = {
+	projects: "kprojects",
+}
 
 export const projectSchema = z.object({
 	id: z.number().min(0),

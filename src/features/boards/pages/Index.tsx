@@ -1,9 +1,12 @@
 import { useProjectsModel } from "#src/features/projects/hooks/index.ts"
 import {
+	CreateNewTaskBtn,
+	TaskCard,
+} from "#src/features/tasks/components/index.tsx"
+import {
 	useStatusModel,
 	useTasksModel,
 } from "#src/features/tasks/hooks/index.ts"
-import { CreateNewTaskBtn, TaskCard } from "#src/features/tasks/index.tsx"
 import { promiseAndSleep } from "#utils/promiseAndSleep.ts"
 import { slugify } from "#utils/slugify.ts"
 import {
