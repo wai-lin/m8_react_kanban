@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { App } from "./App.tsx"
@@ -8,10 +9,20 @@ if (!root) {
 	throw new Error("`root` element not found!")
 }
 
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: import.meta.env.PROD,
+		},
+	},
+})
+
 createRoot(root).render(
 	<StrictMode>
-		<Provider enableSystem={false}>
-			<App />
-		</Provider>
+		<QueryClientProvider client={queryClient}>
+			<Provider enableSystem={false}>
+				<App />
+			</Provider>
+		</QueryClientProvider>
 	</StrictMode>,
 )
