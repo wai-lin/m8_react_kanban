@@ -1,4 +1,5 @@
 import js from "@eslint/js"
+import pluginQuery from "@tanstack/eslint-plugin-query"
 import reactHooks from "eslint-plugin-react-hooks"
 import reactRefresh from "eslint-plugin-react-refresh"
 import { defineConfig, globalIgnores } from "eslint/config"
@@ -23,4 +24,5 @@ export default defineConfig([
 			"react-hooks/refs": ["off"], // NOTE: React 19 no longer need the `forwardRef`
 		},
 	},
+	...pluginQuery.configs["flat/recommended"],
 ])
