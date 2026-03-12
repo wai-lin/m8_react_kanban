@@ -16,14 +16,13 @@ import {
 	Container,
 	Flex,
 	Heading,
-	HStack,
 	IconButton,
 	Text,
 } from "@chakra-ui/react"
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react"
 import { useMemo, useState } from "react"
-import { LuArrowLeft, LuExternalLink } from "react-icons/lu"
-import { Link, Outlet, useParams } from "react-router"
+import { LuArrowLeft, LuGripVertical } from "react-icons/lu"
+import { Link, Outlet, useNavigate, useParams } from "react-router"
 import { BoardColumn } from "../components/BoardColumn"
 import { CreateNewColBtn } from "../components/CreateNewColBtn"
 
@@ -33,6 +32,7 @@ export function Index() {
 	const statusModel = useStatusModel()
 	const tasksModel = useTasksModel()
 	const projectsModel = useProjectsModel()
+	const navigate = useNavigate()
 	const [activeId, setActiveId] = useState<string | null>(null)
 
 	const project = useMemo(() => {
@@ -116,14 +116,11 @@ export function Index() {
 										<TaskCard
 											id={t.id}
 											key={slugify(t.title)}
-											header={
-												<HStack justifyContent="space-between">
-													<Heading size="md">{t.title}</Heading>
-													<Link to={`/${project.slug}/${t.id}`}>
-														<LuExternalLink />
-													</Link>
-												</HStack>
-											}
+											onClick={() => {
+												navigate(`/${project.slug}/${t.id}`)
+											}}
+											header={<Heading size="md">{t.title}</Heading>}
+											handle={<LuGripVertical />}
 										>
 											<Text fontSize="sm">{t.description ?? "..."}</Text>
 										</TaskCard>
