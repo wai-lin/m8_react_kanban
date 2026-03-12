@@ -1,4 +1,4 @@
-import { FormField } from "#components"
+import { Dialog, FormField } from "#components"
 import {
 	Button,
 	ButtonGroup,
@@ -8,6 +8,7 @@ import {
 	Flex,
 	Heading,
 	Input,
+	Text,
 	Textarea,
 } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -29,6 +30,7 @@ export function TaskDetail() {
 	const params = useParams()
 	const tasksModel = useTasksModel()
 	const [isEditing, setIsEditing] = useState(false)
+	const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
 	const task = useMemo(
 		() => tasksModel.get(Number(params.taskId)),
@@ -69,6 +71,13 @@ export function TaskDetail() {
 		setIsEditing(false)
 	}
 
+	function handleDelete() {
+		if (!task) return
+		tasksModel.remove(task)
+		setIsDeleteOpen(false)
+		navigate(-1)
+	}
+
 	return (
 		<Center
 			position="absolute"
@@ -96,9 +105,39 @@ export function TaskDetail() {
 										</Button>
 									</ButtonGroup>
 								) : (
-									<Button size="sm" onClick={() => setIsEditing(true)}>
-										Edit
-									</Button>
+									<ButtonGroup size="sm">
+										<Button size="sm" onClick={() => setIsEditing(true)}>
+											Edit
+										</Button>
+										<Dialog
+											open={isDeleteOpen}
+											onOpenChange={(e) => setIsDeleteOpen(e.open)}
+											trigger={
+												<Button size="sm" colorPalette="red">
+													Delete
+												</Button>
+											}
+											title={<Heading size="md">Delete task</Heading>}
+											footer={
+												<ButtonGroup size="sm">
+													<Button
+														variant="outline"
+														onClick={() => setIsDeleteOpen(false)}
+													>
+														Cancel
+													</Button>
+													<Button colorPalette="red" onClick={handleDelete}>
+														Delete
+													</Button>
+												</ButtonGroup>
+											}
+										>
+											<Text>
+												Are you sure you want to delete this task? This action
+												cannot be undone.
+											</Text>
+										</Dialog>
+									</ButtonGroup>
 								)}
 							</Flex>
 
