@@ -18,6 +18,7 @@ import {
 	Heading,
 	HStack,
 	IconButton,
+	Text,
 } from "@chakra-ui/react"
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react"
 import { useMemo, useState } from "react"
@@ -124,7 +125,7 @@ export function Index() {
 												</HStack>
 											}
 										>
-											{t.description}
+											<Text fontSize="sm">{t.description ?? "..."}</Text>
 										</TaskCard>
 									))}
 							</BoardColumn>
