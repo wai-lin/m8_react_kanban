@@ -22,6 +22,7 @@ import {
 	Heading,
 	IconButton,
 	Text,
+	VStack,
 } from "@chakra-ui/react"
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react"
 import { useMemo, useState } from "react"
@@ -38,20 +39,11 @@ export function Index() {
 	const [activeId, setActiveId] = useState<string | null>(null)
 
 	const project = useMemo(() => {
-		return projectsQuery.data?.find((p) => String(p.id) === params.projectId)
-	}, [params.projectId, projectsQuery.data])
+		return projectsQuery.data?.find((p) => p.slug === params.projectSlug)
+	}, [params.projectSlug, projectsQuery.data])
 
 	const projectId = project?.id
-	if (!projectId) {
-		return (
-			<AbsoluteCenter>
-				<Heading>Project doesn't exists</Heading>
-				<Button asChild>
-					<Link to="/">Back</Link>
-				</Button>
-			</AbsoluteCenter>
-		)
-	}
+
 	const statusesQuery = useProjectStatusesQuery(projectId)
 	const tasksQuery = useProjectTasksQuery(projectId)
 	const createStatus = useCreateProjectStatus(projectId)
@@ -66,23 +58,30 @@ export function Index() {
 	function moveTaskCard(sourceId?: string, targetId?: string) {
 		if (!sourceId || !targetId) return
 		const task = tasksQuery.data?.find((t) => t.id === Number(sourceId))
-		const targetStatus = statusesQuery.data?.find((s) => s.value === targetId)
-		if (!task || !targetStatus || !projectId) return
+		const targetStatus = statusesQuery.data?.find((s) => s.slug === targetId)
+		if (!task || !targetStatus) return
 		updateTask.mutate({
 			id: task.id,
 			input: {
 				statusId: targetStatus.id,
 			},
+			optimisticStatus: {
+				id: targetStatus.id,
+				title: targetStatus.title,
+				value: targetStatus.value,
+			},
 		})
 	}
 
-	if (!project) {
+	if (!project || !projectId) {
 		return (
-			<AbsoluteCenter>
-				<Heading>Project doesn't exists</Heading>
-				<Button asChild>
-					<Link to="/">Back</Link>
-				</Button>
+			<AbsoluteCenter asChild>
+				<VStack>
+					<Heading>Project doesn't exists</Heading>
+					<Button asChild>
+						<Link to="/">Back</Link>
+					</Button>
+				</VStack>
 			</AbsoluteCenter>
 		)
 	}
@@ -100,12 +99,13 @@ export function Index() {
 					<Heading size="lg">{project.title} - Tasks</Heading>
 					<CreateNewTaskBtn
 						projectId={project?.id}
+						defaultStatus={statusesQuery.data?.[0]?.slug}
 						onCreate={async (data) => {
 							await createTask.mutateAsync({
 								projectId: data.projectId,
 								statusId:
-									statusesQuery.data?.find((s) => s.value === data.status)
-										?.id ?? null,
+									statusesQuery.data?.find((s) => s.slug === data.status)?.id ??
+									null,
 								title: data.title,
 								description: data.description,
 							})
@@ -128,6 +128,7 @@ export function Index() {
 						gap="6"
 						flex="1"
 						paddingX="6"
+						paddingTop="4"
 						paddingBottom="6"
 						overflowX="auto"
 						minW="0"
@@ -142,7 +143,7 @@ export function Index() {
 											id={t.id}
 											key={slugify(t.title)}
 											onClick={() => {
-												navigate(`/${project.id}/${t.id}`)
+												navigate(`/${project.slug}/${t.slug}`)
 											}}
 											header={<Heading size="md">{t.title}</Heading>}
 											handle={<LuGripVertical />}

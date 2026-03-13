@@ -24,10 +24,12 @@ vi.mock("#src/services/useTasksService.ts", () => ({
 describe("Boards Index page", () => {
 	it("renders project not found message when project doesn't exist", () => {
 		vi.mocked(useProjectsQuery).mockReturnValue({ data: [] } as never)
+		vi.mocked(useProjectStatusesQuery).mockReturnValue({ data: [] } as never)
+		vi.mocked(useProjectTasksQuery).mockReturnValue({ data: [] } as never)
 		render(
-			<MemoryRouter initialEntries={["/project/1"]}>
+			<MemoryRouter initialEntries={["/project/test-project"]}>
 				<Routes>
-					<Route path="/project/:projectId" element={<Index />} />
+					<Route path="/project/:projectSlug" element={<Index />} />
 				</Routes>
 			</MemoryRouter>,
 		)
@@ -52,9 +54,9 @@ describe("Boards Index page", () => {
 		vi.mocked(useProjectTasksQuery).mockReturnValue({ data: [] } as never)
 
 		render(
-			<MemoryRouter initialEntries={["/project/1"]}>
+			<MemoryRouter initialEntries={["/project/test-project"]}>
 				<Routes>
-					<Route path="/project/:projectId" element={<Index />} />
+					<Route path="/project/:projectSlug" element={<Index />} />
 				</Routes>
 			</MemoryRouter>,
 		)

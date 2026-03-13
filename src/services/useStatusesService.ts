@@ -1,8 +1,4 @@
-import {
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
 	createProjectStatus,
 	deleteProjectStatus,
@@ -12,23 +8,26 @@ import {
 
 const statusesKey = (projectId: number) => ["projects", projectId, "statuses"]
 
-export function useProjectStatusesQuery(projectId: number) {
-	return useSuspenseQuery({
-		queryKey: statusesKey(projectId),
-		queryFn: () => fetchProjectStatuses(projectId),
+export function useProjectStatusesQuery(projectId?: number) {
+	return useQuery({
+		queryKey: ["projects", projectId, "statuses"],
+		queryFn: () => fetchProjectStatuses(projectId as number),
+		enabled: Number.isFinite(projectId),
 	})
 }
 
-export function useCreateProjectStatus(projectId: number) {
+export function useCreateProjectStatus(projectId?: number) {
 	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: createProjectStatus,
-		onSuccess: () =>
-			queryClient.invalidateQueries({ queryKey: statusesKey(projectId) }),
+		onSuccess: () => {
+			if (!projectId) return
+			queryClient.invalidateQueries({ queryKey: statusesKey(projectId) })
+		},
 	})
 }
 
-export function useUpdateProjectStatus(projectId: number) {
+export function useUpdateProjectStatus(projectId?: number) {
 	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: ({
@@ -38,16 +37,20 @@ export function useUpdateProjectStatus(projectId: number) {
 			id: number
 			input: { title?: string; value?: string }
 		}) => updateProjectStatus(id, input),
-		onSuccess: () =>
-			queryClient.invalidateQueries({ queryKey: statusesKey(projectId) }),
+		onSuccess: () => {
+			if (!projectId) return
+			queryClient.invalidateQueries({ queryKey: statusesKey(projectId) })
+		},
 	})
 }
 
-export function useDeleteProjectStatus(projectId: number) {
+export function useDeleteProjectStatus(projectId?: number) {
 	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: deleteProjectStatus,
-		onSuccess: () =>
-			queryClient.invalidateQueries({ queryKey: statusesKey(projectId) }),
+		onSuccess: () => {
+			if (!projectId) return
+			queryClient.invalidateQueries({ queryKey: statusesKey(projectId) })
+		},
 	})
 }

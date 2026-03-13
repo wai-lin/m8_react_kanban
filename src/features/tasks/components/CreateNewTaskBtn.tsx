@@ -8,7 +8,7 @@ import {
 	Textarea,
 } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import type z from "zod"
 import { taskSchema } from "../constants"
@@ -24,21 +24,31 @@ const createTaskId = "create-task-form"
 
 interface Props {
 	projectId: number
+	defaultStatus?: string
 	onCreate: (data: z.output<typeof schema>) => Promise<void>
 }
 
-export function CreateNewTaskBtn({ projectId, onCreate }: Props) {
+export function CreateNewTaskBtn({
+	projectId,
+	defaultStatus,
+	onCreate,
+}: Props) {
 	const [open, setOpen] = useState(false)
 
-	const { register, reset, handleSubmit, formState } = useForm({
+	const { register, reset, setValue, handleSubmit, formState } = useForm({
 		resolver: zodResolver(schema),
 		defaultValues: {
 			title: "",
 			description: "",
-			status: "todo",
+			status: defaultStatus ?? "",
 			projectId: projectId,
 		},
 	})
+
+	useEffect(() => {
+		if (!defaultStatus) return
+		setValue("status", defaultStatus)
+	}, [defaultStatus, setValue])
 
 	const onSubmit = handleSubmit(async (data) => {
 		await onCreate({

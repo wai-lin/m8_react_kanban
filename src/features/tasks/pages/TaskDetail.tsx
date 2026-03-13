@@ -1,4 +1,5 @@
 import { Dialog, FormField } from "#components"
+import { useProjectsQuery } from "#src/services/useProjectsService.ts"
 import {
 	useDeleteTask,
 	useProjectTasksQuery,
@@ -32,10 +33,13 @@ const editTaskId = "edit-task-form"
 export function TaskDetail() {
 	const navigate = useNavigate()
 	const params = useParams()
-	const projectId = Number(params.projectId)
-	if (!Number.isFinite(projectId)) {
-		return null
-	}
+	const projectSlug = params.projectSlug
+	const taskSlug = params.taskSlug
+	const projectsQuery = useProjectsQuery()
+	const project = useMemo(() => {
+		return projectsQuery.data?.find((p) => p.slug === projectSlug)
+	}, [projectSlug, projectsQuery.data])
+	const projectId = project?.id
 	const tasksQuery = useProjectTasksQuery(projectId)
 	const updateTask = useUpdateTask(projectId)
 	const deleteTask = useDeleteTask(projectId)
@@ -43,8 +47,8 @@ export function TaskDetail() {
 	const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
 	const task = useMemo(
-		() => tasksQuery.data?.find((t) => t.id === Number(params.taskId)),
-		[params.taskId, tasksQuery.data],
+		() => tasksQuery.data?.find((t) => t.slug === taskSlug),
+		[taskSlug, tasksQuery.data],
 	)
 
 	const { register, handleSubmit, reset, formState } = useForm({
@@ -87,6 +91,10 @@ export function TaskDetail() {
 		deleteTask.mutate(task.id)
 		setIsDeleteOpen(false)
 		navigate(-1)
+	}
+
+	if (!projectId || !taskSlug) {
+		return null
 	}
 
 	return (
