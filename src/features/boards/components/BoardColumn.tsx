@@ -34,7 +34,9 @@ export function BoardColumn({ dropId, title, children }: BoardColumnProps) {
 			<Stack
 				ref={ref}
 				gap="2"
-				bgColor={hasChildren ? "transparent" : { base: "gray.200", _dark: "gray.700" }}
+				bgColor={
+					hasChildren ? "transparent" : { base: "gray.200", _dark: "gray.700" }
+				}
 				flex="1"
 				overflowY="auto"
 				rounded="sm"
