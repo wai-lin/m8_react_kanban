@@ -1,7 +1,7 @@
+import { compactViewAtom } from "#src/shared/state/atoms.ts"
 import { Box, Card, Flex, Text } from "@chakra-ui/react"
 import { useDraggable } from "@dnd-kit/react"
 import { useAtomValue } from "jotai"
-import { compactViewAtom } from "../../../state/atoms"
 
 export interface TaskCardProps {
 	id: number

@@ -1,21 +1,21 @@
-import { useProjectsQuery } from "#src/services/useProjectsService.ts"
-import { useProjectStatusesQuery } from "#src/services/useStatusesService.ts"
-import { useProjectTasksQuery } from "#src/services/useTasksService.ts"
+import { useProjectsQuery } from "#src/shared/services/useProjectsService.ts"
+import { useProjectStatusesQuery } from "#src/shared/services/useStatusesService.ts"
+import { useProjectTasksQuery } from "#src/shared/services/useTasksService.ts"
 import { render, screen } from "#src/testUtils.tsx"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { describe, expect, it, vi } from "vitest"
 import { Index } from "./Index"
 
-vi.mock("#src/services/useProjectsService.ts", () => ({
+vi.mock("#src/shared/services/useProjectsService.ts", () => ({
 	useProjectsQuery: vi.fn(),
 }))
 
-vi.mock("#src/services/useStatusesService.ts", () => ({
+vi.mock("#src/shared/services/useStatusesService.ts", () => ({
 	useProjectStatusesQuery: vi.fn(),
 	useCreateProjectStatus: () => ({ mutateAsync: vi.fn() }),
 }))
 
-vi.mock("#src/services/useTasksService.ts", () => ({
+vi.mock("#src/shared/services/useTasksService.ts", () => ({
 	useProjectTasksQuery: vi.fn(),
 	useCreateTask: () => ({ mutateAsync: vi.fn() }),
 	useUpdateTask: () => ({ mutate: vi.fn() }),

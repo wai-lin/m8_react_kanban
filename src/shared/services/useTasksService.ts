@@ -1,11 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
 	createTask,
 	deleteTask,
 	fetchProjectTasks,
 	updateTask,
-} from "../api/tasks"
-import type { Task, TaskStatusInfo } from "../api/types"
+} from "#src/api/tasks.ts"
+import type { Task, TaskStatusInfo } from "#src/api/types.ts"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 const tasksKey = (projectId: number) => ["projects", projectId, "tasks"]
 

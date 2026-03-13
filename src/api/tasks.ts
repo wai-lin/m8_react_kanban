@@ -1,5 +1,5 @@
-import { supabase } from "#src/lib/supabaseClient.ts"
-import { slugify } from "#utils/slugify.ts"
+import { supabase } from "#src/shared/lib/supabaseClient.ts"
+import { slugify } from "#src/shared/utils/slugify.ts"
 import type { Task, TaskRow, TaskStatusInfo } from "./types"
 
 type TaskRowWithStatus = TaskRow & {

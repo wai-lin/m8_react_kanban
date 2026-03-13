@@ -1,7 +1,7 @@
+import { compactViewAtom } from "#src/shared/state/atoms.ts"
 import { Card, Heading, Text } from "@chakra-ui/react"
 import { useAtomValue } from "jotai"
 import { Link } from "react-router"
-import { compactViewAtom } from "../../../state/atoms"
 import type { Project } from "../types"
 
 interface Props {

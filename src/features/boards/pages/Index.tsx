@@ -3,17 +3,17 @@ import {
 	CreateNewTaskBtn,
 	TaskCard,
 } from "#src/features/tasks/components/index.tsx"
-import { useProjectsQuery } from "#src/services/useProjectsService.ts"
+import { useProjectsQuery } from "#src/shared/services/useProjectsService.ts"
 import {
 	useCreateProjectStatus,
 	useProjectStatusesQuery,
-} from "#src/services/useStatusesService.ts"
+} from "#src/shared/services/useStatusesService.ts"
 import {
 	useCreateTask,
 	useProjectTasksQuery,
 	useUpdateTask,
-} from "#src/services/useTasksService.ts"
-import { slugify } from "#utils/slugify.ts"
+} from "#src/shared/services/useTasksService.ts"
+import { slugify } from "#src/shared/utils/slugify.ts"
 import {
 	AbsoluteCenter,
 	Box,

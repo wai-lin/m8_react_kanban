@@ -1,12 +1,12 @@
-import { useProjectsQuery } from "#src/services/useProjectsService.ts"
+import { useProjectsQuery } from "#src/shared/services/useProjectsService.ts"
 import { render, screen } from "#src/testUtils.tsx"
 import { MemoryRouter } from "react-router"
 import { describe, expect, it, vi } from "vitest"
 import { Index } from "./Index"
 
-vi.mock("#src/services/useProjectsService.ts", () => ({
-	useProjectsQuery: vi.fn(),
+vi.mock("#src/shared/services/useProjectsService.ts", () => ({
 	useCreateProject: () => ({ mutateAsync: vi.fn() }),
+	useProjectsQuery: vi.fn(),
 }))
 
 describe("Projects page", () => {

@@ -1,4 +1,4 @@
-import { buildStorage } from "#utils/storage.ts"
+import { buildStorage } from "#src/shared/utils/storage.ts"
 import { useMemo, useRef, useState } from "react"
 
 export function useModel<T extends { id: number }>(key: string) {

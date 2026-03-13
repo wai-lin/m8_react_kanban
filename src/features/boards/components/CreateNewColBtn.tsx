@@ -1,6 +1,6 @@
 import { Dialog, FormField } from "#components"
 import { statusSchema } from "#src/features/tasks/constants.ts"
-import { slugify } from "#utils/slugify.ts"
+import { slugify } from "#src/shared/utils/slugify.ts"
 import { Button, ButtonGroup, Fieldset, Heading, Input } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"

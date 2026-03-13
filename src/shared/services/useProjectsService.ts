@@ -1,14 +1,14 @@
 import {
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from "@tanstack/react-query"
-import {
 	createProject,
 	deleteProject,
 	fetchProjects,
 	updateProject,
-} from "../api/projects"
+} from "#src/api/projects.ts"
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query"
 
 const projectsKey = ["projects"]
 

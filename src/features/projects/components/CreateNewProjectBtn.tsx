@@ -1,5 +1,5 @@
 import { Dialog, FormField } from "#components"
-import { slugify } from "#utils/slugify.ts"
+import { slugify } from "#src/shared/utils/slugify.ts"
 import {
 	Button,
 	ButtonGroup,

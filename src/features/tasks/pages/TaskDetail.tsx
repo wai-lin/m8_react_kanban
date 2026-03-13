@@ -1,10 +1,10 @@
 import { Dialog, FormField } from "#components"
-import { useProjectsQuery } from "#src/services/useProjectsService.ts"
+import { useProjectsQuery } from "#src/shared/services/useProjectsService.ts"
 import {
 	useDeleteTask,
 	useProjectTasksQuery,
 	useUpdateTask,
-} from "#src/services/useTasksService.ts"
+} from "#src/shared/services/useTasksService.ts"
 import {
 	Button,
 	ButtonGroup,

@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
 	createProjectStatus,
 	deleteProjectStatus,
 	fetchProjectStatuses,
 	updateProjectStatus,
-} from "../api/statuses"
+} from "#src/api/statuses.ts"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 const statusesKey = (projectId: number) => ["projects", projectId, "statuses"]
 

@@ -1,7 +1,7 @@
+import { Provider } from "#src/shared/components/ui/provider.tsx"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { render as rndr, type RenderOptions } from "@testing-library/react"
 import type { ReactElement } from "react"
-import { Provider } from "./components/ui/provider.tsx"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export * from "@testing-library/react"

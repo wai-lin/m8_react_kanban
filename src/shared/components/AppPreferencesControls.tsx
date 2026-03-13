@@ -1,8 +1,8 @@
+import { colorModeAtom, compactViewAtom } from "#src/shared/state/atoms.ts"
 import { IconButton } from "@chakra-ui/react"
 import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { LuExpand, LuMoon, LuShrink, LuSun } from "react-icons/lu"
-import { colorModeAtom, compactViewAtom } from "../state/atoms"
 import { useColorMode } from "./ui/color-mode-hooks"
 
 export function AppPreferencesControls() {
