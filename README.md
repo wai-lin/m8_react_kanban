@@ -1,15 +1,33 @@
 # Kanban Board
 
-Projects management Kanban board written in React.
+A React Kanban board for managing projects and tasks.
 
 ## Features
 
-1. Board with 3 Default Columns
-   - To Do, In Progress, Done
-2. Create Cards
-   - Simple form to add new cards with title and description
-3. Delete Cards
-4. Drag & Drop Between Columns
-5. Edit Card Details
-6. LocalStorage Persistence
-7. Card editor with RichTextEditor(???Optional)
+- Projects and task boards per project
+- Drag and drop tasks between columns
+- Create, edit, and delete tasks
+- Supabase persistence
+
+## Quick Start
+
+1. Create a `.env.local` file with:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+2. Install dependencies:
+   - `pnpm install`
+3. Run the app:
+   - `pnpm dev`
+
+## Scripts
+
+- `pnpm dev` - start local dev server
+- `pnpm test` - run tests
+- `pnpm check-all` - typecheck, lint, format, depcheck
+
+## Folder Structure
+
+- `src/features` - feature/domain modules (pages, components, hooks)
+- `src/shared` - shared UI, services, utils, state
+- `src/api` - Supabase API functions
+- `src/assets` - global styles and assets
