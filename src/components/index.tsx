@@ -1,3 +1,4 @@
+export { AppPreferencesControls } from "./AppPreferencesControls.tsx"
 export { Dialog } from "./Dialog.tsx"
 export { FormField } from "./FormField.tsx"
 export { Loading } from "./Loading.tsx"

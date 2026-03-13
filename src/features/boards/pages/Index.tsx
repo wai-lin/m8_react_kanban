@@ -1,3 +1,4 @@
+import { AppPreferencesControls } from "#components"
 import {
 	CreateNewTaskBtn,
 	TaskCard,
@@ -21,6 +22,7 @@ import {
 	Flex,
 	Heading,
 	IconButton,
+	Input,
 	Text,
 	VStack,
 } from "@chakra-ui/react"
@@ -30,8 +32,10 @@ import { LuArrowLeft, LuGripVertical } from "react-icons/lu"
 import { Link, Outlet, useNavigate, useParams } from "react-router"
 import { BoardColumn } from "../components/BoardColumn"
 import { CreateNewColBtn } from "../components/CreateNewColBtn"
+import { BoardFilterProvider } from "../context/BoardFilterProvider"
+import { useBoardFilter } from "../context/useBoardFilter"
 
-export function Index() {
+function BoardContent() {
 	const params = useParams()
 
 	const projectsQuery = useProjectsQuery()
@@ -43,6 +47,7 @@ export function Index() {
 	}, [params.projectSlug, projectsQuery.data])
 
 	const projectId = project?.id
+	const { searchTerm, setSearchTerm } = useBoardFilter()
 
 	const statusesQuery = useProjectStatusesQuery(projectId)
 	const tasksQuery = useProjectTasksQuery(projectId)
@@ -97,6 +102,12 @@ export function Index() {
 					</IconButton>
 
 					<Heading size="lg">{project.title} - Tasks</Heading>
+					<Input
+						maxW="240px"
+						placeholder="Search tasks"
+						value={searchTerm}
+						onChange={(event) => setSearchTerm(event.target.value)}
+					/>
 					<CreateNewTaskBtn
 						projectId={project?.id}
 						defaultStatus={statusesQuery.data?.[0]?.slug}
@@ -111,6 +122,9 @@ export function Index() {
 							})
 						}}
 					/>
+					<Flex marginLeft="auto" gap="2">
+						<AppPreferencesControls />
+					</Flex>
 				</Flex>
 
 				<DragDropProvider
@@ -138,6 +152,12 @@ export function Index() {
 							<BoardColumn key={col.id} dropId={col.value} title={col.title}>
 								{(tasksQuery.data ?? [])
 									.filter((t) => t.status?.id === col.id)
+									.filter((t) =>
+										[t.title, t.description]
+											.join(" ")
+											.toLowerCase()
+											.includes(searchTerm.trim().toLowerCase()),
+									)
 									.map((t) => (
 										<TaskCard
 											id={t.id}
@@ -180,5 +200,13 @@ export function Index() {
 
 			<Outlet />
 		</Box>
+	)
+}
+
+export function Index() {
+	return (
+		<BoardFilterProvider>
+			<BoardContent />
+		</BoardFilterProvider>
 	)
 }

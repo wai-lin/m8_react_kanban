@@ -23,7 +23,7 @@ export function BoardColumn({ dropId, title, children }: BoardColumnProps) {
 			h="100%"
 			rounded="sm"
 			shadow="sm"
-			bgColor="gray.100"
+			bgColor={{ base: "gray.100", _dark: "gray.800" }}
 		>
 			<Flex gap="1" align="center" flexShrink={0}>
 				<Heading pl="1" size="lg">
@@ -34,7 +34,7 @@ export function BoardColumn({ dropId, title, children }: BoardColumnProps) {
 			<Stack
 				ref={ref}
 				gap="2"
-				bgColor={hasChildren ? "" : "gray.200"}
+				bgColor={hasChildren ? "transparent" : { base: "gray.200", _dark: "gray.700" }}
 				flex="1"
 				overflowY="auto"
 				rounded="sm"

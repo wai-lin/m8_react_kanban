@@ -1,3 +1,4 @@
+import { AppPreferencesControls } from "#components"
 import {
 	useCreateProject,
 	useProjectsQuery,
@@ -15,7 +16,6 @@ export function Index() {
 		<Container>
 			<Flex gap="4" mt="8" mb="4" align="center">
 				<Heading>Projects</Heading>
-
 				<CreateNewProjectBtn
 					onCreate={async (data) => {
 						await createProject.mutateAsync({
@@ -24,6 +24,9 @@ export function Index() {
 						})
 					}}
 				/>
+				<Flex marginLeft="auto" gap="2">
+					<AppPreferencesControls />
+				</Flex>
 			</Flex>
 
 			<Flex gap="4" wrap="wrap">

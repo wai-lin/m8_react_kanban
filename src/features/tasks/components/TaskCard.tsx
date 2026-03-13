@@ -1,5 +1,7 @@
-import { Box, Card, Flex } from "@chakra-ui/react"
+import { Box, Card, Flex, Text } from "@chakra-ui/react"
 import { useDraggable } from "@dnd-kit/react"
+import { useAtomValue } from "jotai"
+import { compactViewAtom } from "../../../state/atoms"
 
 export interface TaskCardProps {
 	id: number
@@ -18,10 +20,11 @@ export function TaskCard({
 	const { ref, isDragging, handleRef } = useDraggable({
 		id: String(id),
 	})
+	const compactView = useAtomValue(compactViewAtom)
 	return (
 		<Card.Root ref={ref} opacity={isDragging ? 0.5 : 1} onClick={onClick}>
 			{header ? (
-				<Card.Header>
+				<Card.Header py={compactView ? "2" : "4"}>
 					<Flex align="center" justify="space-between" gap="3">
 						<Box>{header}</Box>
 						{handle ? (
@@ -36,7 +39,13 @@ export function TaskCard({
 					</Flex>
 				</Card.Header>
 			) : null}
-			<Card.Body>{children}</Card.Body>
+			<Card.Body py={compactView ? "2" : "4"}>
+				{typeof children === "string" ? (
+					<Text fontSize={compactView ? "sm" : "md"}>{children}</Text>
+				) : (
+					children
+				)}
+			</Card.Body>
 		</Card.Root>
 	)
 }

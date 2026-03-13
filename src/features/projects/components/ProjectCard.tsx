@@ -1,5 +1,7 @@
 import { Card, Heading, Text } from "@chakra-ui/react"
+import { useAtomValue } from "jotai"
 import { Link } from "react-router"
+import { compactViewAtom } from "../../../state/atoms"
 import type { Project } from "../types"
 
 interface Props {
@@ -8,16 +10,19 @@ interface Props {
 }
 
 export function ProjectCard({ to, project }: Props) {
+	const compactView = useAtomValue(compactViewAtom)
 	return (
-		<Card.Root w="xs" asChild>
+		<Card.Root w={compactView ? "xs" : "sm"} asChild>
 			<Link to={to} style={{ textDecoration: "none" }}>
-				<Card.Header>
-					<Heading size="md" truncate>
+				<Card.Header py={compactView ? "2" : "4"}>
+					<Heading size={compactView ? "sm" : "md"} truncate>
 						{project.title}
 					</Heading>
 				</Card.Header>
-				<Card.Body>
-					<Text truncate>{project.description}</Text>
+				<Card.Body py={compactView ? "2" : "4"}>
+					<Text fontSize={compactView ? "sm" : "md"} truncate>
+						{project.description}
+					</Text>
 				</Card.Body>
 			</Link>
 		</Card.Root>

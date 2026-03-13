@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { Provider as JotaiProvider } from "jotai"
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { App } from "./App.tsx"
@@ -21,9 +22,11 @@ const queryClient = new QueryClient({
 createRoot(root).render(
 	<StrictMode>
 		<QueryClientProvider client={queryClient}>
-			<Provider enableSystem={false}>
-				<App />
-			</Provider>
+			<JotaiProvider>
+				<Provider enableSystem={false}>
+					<App />
+				</Provider>
+			</JotaiProvider>
 		</QueryClientProvider>
 	</StrictMode>,
 )
