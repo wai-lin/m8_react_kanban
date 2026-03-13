@@ -6,7 +6,7 @@ function mapProject(row: ProjectRow): Project {
 	return {
 		id: row.id,
 		title: row.title,
-		slug: slugify(row.title),
+		slug: row.slug,
 		description: row.description ?? "",
 		createdAt: new Date(row.created_at),
 		updatedAt: new Date(row.updated_at),
@@ -33,6 +33,7 @@ export async function createProject(input: {
 		.from("projects")
 		.insert({
 			title: input.title,
+			slug: slugify(input.title),
 			description: input.description ?? null,
 		})
 		.select("*")
@@ -46,13 +47,27 @@ export async function updateProject(
 	id: number,
 	input: { title?: string; description?: string },
 ): Promise<Project> {
+	const updatePayload: {
+		title?: string
+		slug?: string
+		description?: string | null
+		updated_at: string
+	} = {
+		updated_at: new Date().toISOString(),
+	}
+
+	if (input.title !== undefined) {
+		updatePayload.title = input.title
+		updatePayload.slug = slugify(input.title)
+	}
+
+	if (input.description !== undefined) {
+		updatePayload.description = input.description ?? null
+	}
+
 	const { data, error } = await supabase
 		.from("projects")
-		.update({
-			title: input.title,
-			description: input.description ?? null,
-			updated_at: new Date().toISOString(),
-		})
+		.update(updatePayload)
 		.eq("id", id)
 		.select("*")
 		.single()

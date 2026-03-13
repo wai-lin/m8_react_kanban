@@ -15,8 +15,6 @@ interface Props {
 const schema = statusSchema.pick({
 	title: true,
 	value: true,
-	createdAt: true,
-	updatedAt: true,
 })
 
 const createFormId = "status-create-form"
@@ -27,14 +25,10 @@ export function CreateNewColBtn({ onCreate }: Props) {
 	const { register, control, reset, handleSubmit, setValue, formState } =
 		useForm({
 			resolver: zodResolver(schema),
-			defaultValues: {
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			},
 		})
 
 	const onSubmit = handleSubmit(async (data) => {
-		await onCreate({ ...data, createdAt: new Date(), updatedAt: new Date() })
+		await onCreate({ ...data })
 		setOpen(false)
 		reset()
 	})

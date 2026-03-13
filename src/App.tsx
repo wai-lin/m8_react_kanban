@@ -10,7 +10,7 @@ const router = createBrowserRouter(
 			children: [
 				{ index: true, Component: projectPages.Index },
 				{
-					path: "/:slug",
+					path: "/:projectId",
 					lazy: async () => {
 						const { boardsPages } = await import("./features/boards")
 						return { Component: boardsPages.Index }

@@ -2,6 +2,7 @@ export interface ProjectRow {
 	id: number
 	title: string
 	description: string | null
+	slug: string
 	created_at: string
 	updated_at: string
 	deleted_at: string | null
@@ -12,6 +13,7 @@ export interface ProjectStatusRow {
 	project_id: number
 	title: string
 	value: string | null
+	slug: string
 	created_at: string
 	updated_at: string
 	deleted_at: string | null
@@ -23,6 +25,7 @@ export interface TaskRow {
 	status_id: number | null
 	title: string
 	description: string | null
+	slug: string
 	created_at: string
 	updated_at: string
 	deleted_at: string | null
@@ -33,6 +36,7 @@ export interface ProjectStatus {
 	projectId: number
 	title: string
 	value: string
+	slug: string
 	createdAt: Date
 	updatedAt: Date
 	deletedAt: Date | null
@@ -59,6 +63,7 @@ export interface Task {
 	projectId: number
 	statusId: number | null
 	title: string
+	slug: string
 	description: string
 	createdAt: Date
 	updatedAt: Date

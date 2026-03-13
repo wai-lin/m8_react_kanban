@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query"
 import {
 	createTask,
 	deleteTask,
@@ -8,13 +12,10 @@ import {
 
 const tasksKey = (projectId: number) => ["projects", projectId, "tasks"]
 
-export function useProjectTasksQuery(projectId?: number) {
-	return useQuery({
-		// NOTE: `projectId` is actually included in `tasksKey` fn, eslint just can't analyze fn return type
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps
-		queryKey: projectId ? tasksKey(projectId) : ["projects", "tasks"],
-		queryFn: () => fetchProjectTasks(projectId as number),
-		enabled: Number.isFinite(projectId),
+export function useProjectTasksQuery(projectId: number) {
+	return useSuspenseQuery({
+		queryKey: tasksKey(projectId),
+		queryFn: () => fetchProjectTasks(projectId),
 	})
 }
 

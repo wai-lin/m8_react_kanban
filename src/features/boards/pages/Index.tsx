@@ -1,13 +1,17 @@
-import { useProjectsModel } from "#src/features/projects/hooks/index.ts"
 import {
 	CreateNewTaskBtn,
 	TaskCard,
 } from "#src/features/tasks/components/index.tsx"
+import { useProjectsQuery } from "#src/services/useProjectsService.ts"
 import {
-	useStatusModel,
-	useTasksModel,
-} from "#src/features/tasks/hooks/index.ts"
-import { promiseAndSleep } from "#utils/promiseAndSleep.ts"
+	useCreateProjectStatus,
+	useProjectStatusesQuery,
+} from "#src/services/useStatusesService.ts"
+import {
+	useCreateTask,
+	useProjectTasksQuery,
+	useUpdateTask,
+} from "#src/services/useTasksService.ts"
 import { slugify } from "#utils/slugify.ts"
 import {
 	AbsoluteCenter,
@@ -29,30 +33,47 @@ import { CreateNewColBtn } from "../components/CreateNewColBtn"
 export function Index() {
 	const params = useParams()
 
-	const statusModel = useStatusModel()
-	const tasksModel = useTasksModel()
-	const projectsModel = useProjectsModel()
+	const projectsQuery = useProjectsQuery()
 	const navigate = useNavigate()
 	const [activeId, setActiveId] = useState<string | null>(null)
 
 	const project = useMemo(() => {
-		return projectsModel.items.find((p) => p.slug === params.slug)
-	}, [params.slug, projectsModel.items])
+		return projectsQuery.data?.find((p) => String(p.id) === params.projectId)
+	}, [params.projectId, projectsQuery.data])
 
-	const tasks = useMemo(() => {
-		return tasksModel.items.filter((t) => t.projectId === project?.id)
-	}, [project?.id, tasksModel.items])
+	const projectId = project?.id
+	if (!projectId) {
+		return (
+			<AbsoluteCenter>
+				<Heading>Project doesn't exists</Heading>
+				<Button asChild>
+					<Link to="/">Back</Link>
+				</Button>
+			</AbsoluteCenter>
+		)
+	}
+	const statusesQuery = useProjectStatusesQuery(projectId)
+	const tasksQuery = useProjectTasksQuery(projectId)
+	const createStatus = useCreateProjectStatus(projectId)
+	const createTask = useCreateTask(projectId)
+	const updateTask = useUpdateTask(projectId)
 
 	const activeTask = useMemo(() => {
 		if (!activeId) return null
-		return tasksModel.get(Number(activeId))
-	}, [activeId, tasksModel])
+		return tasksQuery.data?.find((t) => t.id === Number(activeId)) ?? null
+	}, [activeId, tasksQuery.data])
 
 	function moveTaskCard(sourceId?: string, targetId?: string) {
 		if (!sourceId || !targetId) return
-		const task = tasksModel.get(Number(sourceId))
-		if (!task) return
-		tasksModel.set({ ...task, status: String(targetId), updatedAt: new Date() })
+		const task = tasksQuery.data?.find((t) => t.id === Number(sourceId))
+		const targetStatus = statusesQuery.data?.find((s) => s.value === targetId)
+		if (!task || !targetStatus || !projectId) return
+		updateTask.mutate({
+			id: task.id,
+			input: {
+				statusId: targetStatus.id,
+			},
+		})
 	}
 
 	if (!project) {
@@ -79,12 +100,16 @@ export function Index() {
 					<Heading size="lg">{project.title} - Tasks</Heading>
 					<CreateNewTaskBtn
 						projectId={project?.id}
-						onCreate={(data) =>
-							promiseAndSleep(
-								() => tasksModel.set({ ...data, id: tasksModel.newId() }),
-								500,
-							)
-						}
+						onCreate={async (data) => {
+							await createTask.mutateAsync({
+								projectId: data.projectId,
+								statusId:
+									statusesQuery.data?.find((s) => s.value === data.status)
+										?.id ?? null,
+								title: data.title,
+								description: data.description,
+							})
+						}}
 					/>
 				</Flex>
 
@@ -108,16 +133,16 @@ export function Index() {
 						minW="0"
 						minH="0"
 					>
-						{statusModel.items.map((col) => (
-							<BoardColumn key={col.value} dropId={col.value} title={col.title}>
-								{tasks
-									.filter((t) => t.status === col.value)
+						{statusesQuery.data?.map((col) => (
+							<BoardColumn key={col.id} dropId={col.value} title={col.title}>
+								{(tasksQuery.data ?? [])
+									.filter((t) => t.status?.id === col.id)
 									.map((t) => (
 										<TaskCard
 											id={t.id}
 											key={slugify(t.title)}
 											onClick={() => {
-												navigate(`/${project.slug}/${t.id}`)
+												navigate(`/${project.id}/${t.id}`)
 											}}
 											header={<Heading size="md">{t.title}</Heading>}
 											handle={<LuGripVertical />}
@@ -129,14 +154,13 @@ export function Index() {
 						))}
 
 						<CreateNewColBtn
-							onCreate={(data) =>
-								promiseAndSleep(() => {
-									statusModel.set({
-										...data,
-										id: statusModel.newId(),
-									})
-								}, 500)
-							}
+							onCreate={async (data) => {
+								await createStatus.mutateAsync({
+									projectId: project.id,
+									title: data.title,
+									value: data.value,
+								})
+							}}
 						/>
 					</Flex>
 

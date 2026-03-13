@@ -1,4 +1,5 @@
 import { supabase } from "#src/lib/supabaseClient.ts"
+import { slugify } from "#utils/slugify.ts"
 import type { Task, TaskRow, TaskStatusInfo } from "./types"
 
 type TaskRowWithStatus = TaskRow & {
@@ -11,6 +12,7 @@ function mapTask(row: TaskRowWithStatus): Task {
 		projectId: row.project_id,
 		statusId: row.status_id,
 		title: row.title,
+		slug: row.slug,
 		description: row.description ?? "",
 		createdAt: new Date(row.created_at),
 		updatedAt: new Date(row.updated_at),
@@ -49,6 +51,7 @@ export async function createTask(input: {
 			project_id: input.projectId,
 			status_id: input.statusId ?? null,
 			title: input.title,
+			slug: slugify(input.title),
 			description: input.description ?? null,
 		})
 		.select("*, project_statuses ( id, title, value )")
@@ -62,14 +65,32 @@ export async function updateTask(
 	id: number,
 	input: { title?: string; description?: string; statusId?: number | null },
 ): Promise<Task> {
+	const updatePayload: {
+		title?: string
+		description?: string | null
+		status_id?: number | null
+		slug?: string
+		updated_at: string
+	} = {
+		updated_at: new Date().toISOString(),
+	}
+
+	if (input.title !== undefined) {
+		updatePayload.title = input.title
+		updatePayload.slug = slugify(input.title)
+	}
+
+	if (input.description !== undefined) {
+		updatePayload.description = input.description ?? null
+	}
+
+	if (input.statusId !== undefined) {
+		updatePayload.status_id = input.statusId
+	}
+
 	const { data, error } = await supabase
 		.from("tasks")
-		.update({
-			title: input.title,
-			description: input.description ?? null,
-			status_id: input.statusId ?? null,
-			updated_at: new Date().toISOString(),
-		})
+		.update(updatePayload)
 		.eq("id", id)
 		.select("*, project_statuses ( id, title, value )")
 		.single()

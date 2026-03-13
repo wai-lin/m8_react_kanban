@@ -1,11 +1,15 @@
-import { promiseAndSleep } from "#utils/promiseAndSleep.ts"
+import {
+	useCreateProject,
+	useProjectsQuery,
+} from "#src/services/useProjectsService.ts"
 import { Card, Container, Flex, Heading, Text } from "@chakra-ui/react"
 import { CreateNewProjectBtn } from "../components/CreateNewProjectBtn"
 import { ProjectCard } from "../components/ProjectCard"
-import { useProjectsModel } from "../hooks/useProjectModel"
 
 export function Index() {
-	const projectsModel = useProjectsModel()
+	const projectsQuery = useProjectsQuery()
+	const createProject = useCreateProject()
+	const projects = projectsQuery.data ?? []
 
 	return (
 		<Container>
@@ -13,23 +17,24 @@ export function Index() {
 				<Heading>Projects</Heading>
 
 				<CreateNewProjectBtn
-					onCreate={(data) =>
-						promiseAndSleep(() => {
-							projectsModel.set({ ...data, id: projectsModel.newId() })
-						}, 500)
-					}
+					onCreate={async (data) => {
+						await createProject.mutateAsync({
+							title: data.title,
+							description: data.description,
+						})
+					}}
 				/>
 			</Flex>
 
 			<Flex gap="4" wrap="wrap">
-				{projectsModel.isEmpty && (
+				{!projectsQuery.isLoading && projects.length === 0 && (
 					<Card.Root>
 						<Card.Body>
 							<Text>There's no project yet...</Text>
 						</Card.Body>
 					</Card.Root>
 				)}
-				{projectsModel.items.map((p) => (
+				{projects.map((p) => (
 					<ProjectCard key={p.slug} to={`/${p.slug}`} project={p} />
 				))}
 			</Flex>

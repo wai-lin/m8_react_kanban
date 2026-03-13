@@ -1,4 +1,5 @@
 import { supabase } from "#src/lib/supabaseClient.ts"
+import { slugify } from "#utils/slugify.ts"
 import type { ProjectStatus, ProjectStatusRow } from "./types"
 
 function mapStatus(row: ProjectStatusRow): ProjectStatus {
@@ -7,6 +8,7 @@ function mapStatus(row: ProjectStatusRow): ProjectStatus {
 		projectId: row.project_id,
 		title: row.title,
 		value: row.value ?? "",
+		slug: row.slug,
 		createdAt: new Date(row.created_at),
 		updatedAt: new Date(row.updated_at),
 		deletedAt: row.deleted_at ? new Date(row.deleted_at) : null,
@@ -38,6 +40,7 @@ export async function createProjectStatus(input: {
 			project_id: input.projectId,
 			title: input.title,
 			value: input.value ?? null,
+			slug: input.value ?? slugify(input.title),
 		})
 		.select("*")
 		.single()
@@ -50,13 +53,28 @@ export async function updateProjectStatus(
 	id: number,
 	input: { title?: string; value?: string },
 ): Promise<ProjectStatus> {
+	const updatePayload: {
+		title?: string
+		value?: string | null
+		slug?: string
+		updated_at: string
+	} = {
+		updated_at: new Date().toISOString(),
+	}
+
+	if (input.title !== undefined) {
+		updatePayload.title = input.title
+		updatePayload.slug = slugify(input.title)
+	}
+
+	if (input.value !== undefined) {
+		updatePayload.value = input.value
+		updatePayload.slug = input.value ?? updatePayload.slug
+	}
+
 	const { data, error } = await supabase
 		.from("project_statuses")
-		.update({
-			title: input.title,
-			value: input.value,
-			updated_at: new Date().toISOString(),
-		})
+		.update(updatePayload)
 		.eq("id", id)
 		.select("*")
 		.single()

@@ -18,8 +18,6 @@ const schema = taskSchema.pick({
 	description: true,
 	status: true,
 	projectId: true,
-	createdAt: true,
-	updatedAt: true,
 })
 
 const createTaskId = "create-task-form"
@@ -38,8 +36,6 @@ export function CreateNewTaskBtn({ projectId, onCreate }: Props) {
 			title: "",
 			description: "",
 			status: "todo",
-			createdAt: new Date(),
-			updatedAt: new Date(),
 			projectId: projectId,
 		},
 	})
@@ -47,8 +43,6 @@ export function CreateNewTaskBtn({ projectId, onCreate }: Props) {
 	const onSubmit = handleSubmit(async (data) => {
 		await onCreate({
 			...data,
-			createdAt: new Date(),
-			updatedAt: new Date(),
 			projectId,
 		})
 		setOpen(false)

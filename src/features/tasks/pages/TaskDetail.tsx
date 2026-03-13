@@ -1,5 +1,10 @@
 import { Dialog, FormField } from "#components"
 import {
+	useDeleteTask,
+	useProjectTasksQuery,
+	useUpdateTask,
+} from "#src/services/useTasksService.ts"
+import {
 	Button,
 	ButtonGroup,
 	Card,
@@ -16,7 +21,6 @@ import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router"
 import { taskSchema } from "../constants"
-import { useTasksModel } from "../hooks"
 
 const schema = taskSchema.pick({
 	title: true,
@@ -28,13 +32,19 @@ const editTaskId = "edit-task-form"
 export function TaskDetail() {
 	const navigate = useNavigate()
 	const params = useParams()
-	const tasksModel = useTasksModel()
+	const projectId = Number(params.projectId)
+	if (!Number.isFinite(projectId)) {
+		return null
+	}
+	const tasksQuery = useProjectTasksQuery(projectId)
+	const updateTask = useUpdateTask(projectId)
+	const deleteTask = useDeleteTask(projectId)
 	const [isEditing, setIsEditing] = useState(false)
 	const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
 	const task = useMemo(
-		() => tasksModel.get(Number(params.taskId)),
-		[params.taskId, tasksModel],
+		() => tasksQuery.data?.find((t) => t.id === Number(params.taskId)),
+		[params.taskId, tasksQuery.data],
 	)
 
 	const { register, handleSubmit, reset, formState } = useForm({
@@ -54,11 +64,12 @@ export function TaskDetail() {
 
 	const onSubmit = handleSubmit((data) => {
 		if (!task) return
-		tasksModel.set({
-			...task,
-			title: data.title,
-			description: data.description ?? "",
-			updatedAt: new Date(),
+		updateTask.mutate({
+			id: task.id,
+			input: {
+				title: data.title,
+				description: data.description ?? "",
+			},
 		})
 		setIsEditing(false)
 	})
@@ -73,7 +84,7 @@ export function TaskDetail() {
 
 	function handleDelete() {
 		if (!task) return
-		tasksModel.remove(task)
+		deleteTask.mutate(task.id)
 		setIsDeleteOpen(false)
 		navigate(-1)
 	}

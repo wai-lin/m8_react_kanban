@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query"
 import {
 	createProject,
 	deleteProject,
@@ -9,7 +13,7 @@ import {
 const projectsKey = ["projects"]
 
 export function useProjectsQuery() {
-	return useQuery({
+	return useSuspenseQuery({
 		queryKey: projectsKey,
 		queryFn: fetchProjects,
 	})
