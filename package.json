@@ -6,12 +6,6 @@
 	"packageManager": "pnpm@10.5.2",
 	"imports": {
 		"#components": "./src/shared/components/index.tsx",
-		"#shared/*": "./src/shared/*",
-		"#shared/services": "./src/shared/services/index.ts",
-		"#shared/state/*": "./src/shared/state/*",
-		"#shared/utils/*": "./src/shared/utils/*",
-		"#shared/lib/*": "./src/shared/lib/*",
-		"#shared/components/*": "./src/shared/components/*",
 		"#contexts/*": "./src/contexts/*",
 		"#hooks/*": "./src/hooks/*",
 		"#src/*": "./src/*"

@@ -47,7 +47,11 @@ export function CreateNewProjectBtn({ onCreate }: Props) {
 		<Dialog
 			open={open}
 			onOpenChange={(e) => setOpen(e.open)}
-			trigger={<Button size="sm">Create new</Button>}
+			trigger={
+				<Button size="sm" colorPalette="brand">
+					Create new
+				</Button>
+			}
 			title={<Heading>Create new project</Heading>}
 			footer={
 				<ButtonGroup size="sm">
@@ -62,6 +66,7 @@ export function CreateNewProjectBtn({ onCreate }: Props) {
 						type="submit"
 						form={createFormId}
 						loading={formState.isSubmitting}
+						colorPalette="brand"
 					>
 						Save
 					</Button>

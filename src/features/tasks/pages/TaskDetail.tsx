@@ -119,6 +119,7 @@ export function TaskDetail() {
 											type="submit"
 											form={editTaskId}
 											loading={formState.isSubmitting}
+											colorPalette="brand"
 										>
 											Save
 										</Button>

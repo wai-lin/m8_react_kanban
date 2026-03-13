@@ -63,7 +63,11 @@ export function CreateNewTaskBtn({
 		<Dialog
 			open={open}
 			onOpenChange={(e) => setOpen(e.open)}
-			trigger={<Button size="sm">New Task</Button>}
+			trigger={
+				<Button size="sm" colorPalette="brand">
+					New Task
+				</Button>
+			}
 			title={<Heading>Create new task</Heading>}
 			footer={
 				<ButtonGroup size="sm">
@@ -74,6 +78,7 @@ export function CreateNewTaskBtn({
 						form={createTaskId}
 						type="submit"
 						loading={formState.isSubmitting}
+						colorPalette="brand"
 					>
 						Save
 					</Button>

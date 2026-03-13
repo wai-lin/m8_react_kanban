@@ -44,7 +44,7 @@ export function CreateNewColBtn({ onCreate }: Props) {
 			open={open}
 			onOpenChange={(e) => setOpen(e.open)}
 			trigger={
-				<Button size="sm" w="300px">
+				<Button size="sm" w="300px" colorPalette="brand">
 					<LuPlus /> Create new
 				</Button>
 			}
@@ -62,6 +62,7 @@ export function CreateNewColBtn({ onCreate }: Props) {
 						type="submit"
 						form={createFormId}
 						loading={formState.isSubmitting}
+						colorPalette="brand"
 					>
 						Save
 					</Button>
