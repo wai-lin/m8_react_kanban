@@ -2,7 +2,7 @@ import { AppPreferencesControls } from "#components"
 import {
 	useCreateProject,
 	useProjectsQuery,
-} from "#src/shared/services/useProjectsService.ts"
+} from "#src/features/projects/services/useProjectsService.ts"
 import { Card, Container, Flex, Heading, Text } from "@chakra-ui/react"
 import { CreateNewProjectBtn } from "../components/CreateNewProjectBtn"
 import { ProjectCard } from "../components/ProjectCard"

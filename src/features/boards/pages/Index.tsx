@@ -1,18 +1,18 @@
 import { AppPreferencesControls } from "#components"
 import {
+	useCreateProjectStatus,
+	useProjectStatusesQuery,
+} from "#src/features/boards/services/useStatusesService.ts"
+import { useProjectsQuery } from "#src/features/projects/services/useProjectsService.ts"
+import {
 	CreateNewTaskBtn,
 	TaskCard,
 } from "#src/features/tasks/components/index.tsx"
-import { useProjectsQuery } from "#src/shared/services/useProjectsService.ts"
-import {
-	useCreateProjectStatus,
-	useProjectStatusesQuery,
-} from "#src/shared/services/useStatusesService.ts"
 import {
 	useCreateTask,
 	useProjectTasksQuery,
 	useUpdateTask,
-} from "#src/shared/services/useTasksService.ts"
+} from "#src/features/tasks/services/useTasksService.ts"
 import { slugify } from "#src/shared/utils/slugify.ts"
 import {
 	AbsoluteCenter,
